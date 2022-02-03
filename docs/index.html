@@ -40,8 +40,13 @@
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    $(function () {
-        $("#schoolsmap").load("../viz/schools_cluster.html");
+    // Importing School Maps
+    $(document).ready(function () {
+        $('#schoolsmap').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_cluster.html?token=GHSAT0AAAAAABMBGFPMIHNCOL35MT42EXWCYQECOQA");
+    });
+    // Importing School Density
+    $(document).ready(function () {
+        $('#schoolsmap').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_density.html?token=GHSAT0AAAAAABMBGFPMTOTARUKGGY5FBHEKYQECPSA");
     });
 </script>
 
@@ -89,7 +94,7 @@
     <!-- First Grid -->
     <div id="searchschool" class="w3-row-padding w3-padding-64 w3-container">
         <div class="w3-content">
-            <div class="w3-twothird" id="schoolsmap">
+            <div class="w3-twothird" id="schoolsmap" , style="width:100px; height:100px">
             </div>
             <div class="w3-third w3-center">
                 <h1>Lorem Ipsum</h1>
