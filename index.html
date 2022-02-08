@@ -1,54 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Schools in Trentino</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="particles.css">
-<link rel="javascript" href="particles.js">
-<style>
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        font-family: "Lato", sans-serif
-    }
 
-    .w3-bar,
-    h1,
-    button {
-        font-family: "Montserrat", sans-serif
-    }
+<head>
+    <title>Schools in Trentino</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display"
+    rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="particles.css">
+    <link rel="javascript" href="particles.js">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 
-    .fa-anchor,
-    .fa-coffee {
-        font-size: 200px
-    }
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Playfair Display", serif
+        }
 
-    #particles-js {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: cornflowerblue;
-    }
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    // Importing School Maps
-    $(document).ready(function () {
-        $('#schoolsmap').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_cluster.html?token=GHSAT0AAAAAABMBGFPMIHNCOL35MT42EXWCYQECOQA");
-    });
-    // Importing School Density
-    $(document).ready(function () {
-        $('#schoolsmap').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_density.html?token=GHSAT0AAAAAABMBGFPMTOTARUKGGY5FBHEKYQECPSA");
-    });
-</script>
+        .w3-bar,
+        h1,
+        button {
+            font-family: "Montserrat", sans-serif
+        }
+
+        .fa-anchor,
+        .fa-coffee {
+            font-size: 200px
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: cornflowerblue;
+        }
+    </style>
+    <script>
+
+        // Importing School Maps
+        $(document).ready(function () {
+            $('#map_39927471e1a14d2089d9d7b2b7ff3e10').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_cluster.html?token=GHSAT0AAAAAABMBGFPMIHNCOL35MT42EXWCYQECOQA");
+        });
+        // Importing School Density
+        $(document).ready(function () {
+            $('#schoolsdensity').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_density.html?token=GHSAT0AAAAAABMBGFPMTOTARUKGGY5FBHEKYQECPSA");
+        });
+    </script>
+</head>
 
 <body>
 
@@ -56,7 +71,7 @@
     <div class="w3-top">
         <div class="w3-bar w3-cornflowerblue w3-card w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-cornflowerblue"
-                onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+                title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
             <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
             <a href="#searchschool" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Search
                 your
@@ -94,7 +109,8 @@
     <!-- First Grid -->
     <div id="searchschool" class="w3-row-padding w3-padding-64 w3-container">
         <div class="w3-content">
-            <div class="w3-twothird" id="schoolsmap" >
+            <div class="w3-twothird">
+                <div id="map_39927471e1a14d2089d9d7b2b7ff3e10"></div>
             </div>
             <div class="w3-third w3-right">
                 <h1>Lorem Ipsum</h1>
@@ -220,17 +236,7 @@
         <p>Aurora Maria Tumminello<br>University of Trento</p>
     </footer>
 
-    <script>
-        // Used to toggle the menu on small screens when clicking on the menu button
-        function myFunction() {
-            var x = document.getElementById("navDemo");
-            if (x.className.indexOf("w3-show") == -1) {
-                x.className += " w3-show";
-            } else {
-                x.className = x.className.replace(" w3-show", "");
-            }
-        }
-    </script>
+
 </body>
 
 </html>
