@@ -28,7 +28,7 @@ trentino.plot()
 # %%
 # Importing schools position and name
 schools = gpd.read_file("../data/Trentino/schools/schools.geojson")
-schools = schools[['Scuola','Tipo Istituto','Tipo Gestione','Comune','address','geometry']]
+schools = schools[['Nome','Tipo Istituto','Gestione','Comune','Indirizzo','geometry']]
 # %%
 munic = {}
 for i in range(len(trentino)):
@@ -49,41 +49,35 @@ for m in trentino['COMUNE']:
 
 # %%
 trentino['n_schools'] = n_schools
-
+trentino.rename(columns={'COMUNE':'Comune'}, inplace=True)
 # %%
 # ADDING POPULATION DATA
 # Population
-population = pd.read_csv("../data/population/ItalianPopulation2021.csv")
+population = pd.read_csv("../data/population/tot_italian_pop_2021.csv")
+population = population[population['ITTER107'].isin(list(trentino['PRO_COM_T']))]
 population = population[['ITTER107', 'Territorio',
-                         'Sesso', 'Value']].iloc[3:, :].reset_index(drop=True)
-
-municipalities = pd.read_csv("../data/Municipalities.csv",
-                             delimiter=";", encoding="ANSI", dtype={'ID': 'object'})
+                         'Sesso', 'Value']].reset_index(drop=True)
 
 pop_tot = population.groupby(
     ['ITTER107', 'Territorio', 'Sesso'], as_index=False).sum()
 pop_tot.rename(columns={'Value': 'population'}, inplace=True)
 
 # %%
-pop_tot = pop_tot[pop_tot['Sesso'] != "totale"]
-
-#%%
-pop_tot = pop_tot.pivot(index = ['ITTER107','Territorio'],
-              columns='Sesso',
-              values='population').reset_index()
+pop_tot = pop_tot[pop_tot['Sesso'] == "totale"]
 # %%
 trentino = pd.merge(trentino, pop_tot,
                     left_on='PRO_COM_T',
                     right_on='ITTER107')
+
 # %%
+trentino['Comune'] = [x.title() for x in trentino['Comune']]
 trentino[['geometry', 'n_schools', 
-          'COMUNE', 'population']].to_file("../data/trentino.geojson",
+          'Comune', 'population']].to_file("../data/trentino.geojson",
                                          driver='GeoJSON',
                                          encoding = "UTF-8")
 
 #%%
-trentino = trentino[['COMUNE','geometry','n_schools','ITTER107','femmine','maschi']]
-trentino['population'] = trentino['femmine']+ trentino['maschi']
+
 # %%
 
 geo_dataset = "../data/trentino.geojson"
@@ -92,7 +86,9 @@ bins = list(trentino["n_schools"].quantile([0, 0.75,
                                             0.90, 0.95, 0.98, 0.99, 0.995, 1]))
 m = folium.Map(location=[46.1, 11.2], 
                zoom_start=9, 
-               tiles = 'cartodbpositron')
+               tiles = 'cartodbpositron',
+               zoom_control=False,
+               scrollWheelZoom=False)
 
 import geojson
 geo_data = geojson.load(open(geo_dataset,encoding="utf-8"))
@@ -101,8 +97,8 @@ c = folium.Choropleth(
     geo_data=geo_data,
     name="choropleth",
     data=trentino,
-    columns=["COMUNE", "n_schools"],
-    key_on="feature.properties.COMUNE",
+    columns=["Comune", "n_schools"],
+    key_on="feature.properties.Comune",
     fill_color="YlOrRd",
     fill_opacity=0.5,
     line_opacity=0.2,
@@ -110,9 +106,8 @@ c = folium.Choropleth(
     bins=bins,
     reset=True,
 )
-folium.GeoJsonTooltip(fields = ['COMUNE','n_schools','population']).add_to(c.geojson)
+folium.GeoJsonTooltip(fields = ['Comune','n_schools','population']).add_to(c.geojson)
 c.add_to(m)
-
-folium.LayerControl().add_to(m)
-
+m
 m.save("../viz/schools_density.html")
+#%%

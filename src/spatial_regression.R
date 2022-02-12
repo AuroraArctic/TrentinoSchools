@@ -6,7 +6,6 @@ library(sf)
 
 # Change working directory
 getwd()
-setwd("G:/Il mio Drive/2nd Year/Geospatial/Italian Schools/src/")
 
 
 # Import and try to change CRS
@@ -35,15 +34,23 @@ points(df@coords, col = "cornflowerblue", cex = 1, pch = 1)
 ######################################
 # TODO: Animation of Trentino school network based on the number of neighbours
 # KNN
-knn <- knn2nb(knearneigh(coordinates(df),
-    k = 4,
-    longlat = T
-))
+knn = c()
+for(i in 2:10){
+    knn <- append(knn,
+                  knn2nb(knearneigh(coordinates(df),
+                                    k = i,
+                                    longlat = T
+                  )))
+}
 
+plot(knn2nb(knearneigh(coordinates(df),
+                  k = i,
+                  longlat = T
+)), df@coords)
 
 # define the neighbourhood relationships amongst the spatial units. 
 plot(tn, border = "grey90", axis = tn)
-plot(knn, df@coords, col = "cornflowerblue", lwd=0.2, cex=0.5, add=TRUE)
+plot(knn[2], df@coords, col = "cornflowerblue", lwd=0.2, cex=0.5, add=TRUE)
 
 ######################################
 # Contiguity based approach
@@ -51,3 +58,9 @@ contnb_q <- poly2nb(tn, queen=T)
 contnb_q
 plot(tn, border="grey")
 plot(contnb_q, df@coords, add=TRUE)
+
+######################################
+# Get students data
+stud_df = read.csv("../data/schools/students.csv")
+
+# Regression about population, students, classes and position

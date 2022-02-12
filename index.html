@@ -10,8 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display"
-    rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="particles.css">
     <link rel="javascript" href="particles.js">
@@ -22,6 +21,12 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
+        integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+        integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
     <style>
         body,
@@ -35,7 +40,6 @@
         }
 
         .w3-bar,
-        h1,
         button {
             font-family: "Montserrat", sans-serif
         }
@@ -49,33 +53,41 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background-color: cornflowerblue;
+            background-color: #F27059;
         }
     </style>
-    <script>
-
-        // Importing School Maps
-        $(document).ready(function () {
-            $('#map_39927471e1a14d2089d9d7b2b7ff3e10').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_cluster.html?token=GHSAT0AAAAAABMBGFPMIHNCOL35MT42EXWCYQECOQA");
-        });
-        // Importing School Density
-        $(document).ready(function () {
-            $('#schoolsdensity').load("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/viz/schools_density.html?token=GHSAT0AAAAAABMBGFPMTOTARUKGGY5FBHEKYQECPSA");
-        });
-    </script>
 </head>
 
 <body>
+    <script>
+
+        function choose_school() {
+            // Update the path for the route isochrone
+            update_route_isochrone()
+            // Update the path for the POIs around the school
+        }
+
+
+        function update_route_isochrone() {
+            transport = $("#choose-transport :selected").val();
+            school = $("#choose-school :selected").val();
+            console.log(transport);
+            console.log(school);
+            $("#route-isochrone").attr("src", "viz/isochrones/route/" + transport + "/" + school + ".html");
+            // transport = document.getElementById("choose-transport").value
+            // school = document.getElementById("choose-school").value
+            // document.getElementById("route-isochrone").src = "viz/isochrones/route/" + path + "/" + school + ".html"
+        }
+    </script>
 
     <!-- Navbar -->
     <div class="w3-top">
-        <div class="w3-bar w3-cornflowerblue w3-card w3-left-align w3-large">
+        <div class="w3-bar main-color w3-card w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-cornflowerblue"
                 title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
             <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-            <a href="#searchschool" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Search
-                your
-                school</a>
+            <a href="#searchschool" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Cerca
+                Scuola</a>
             <a href="#density" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">School
                 density</a>
             <a href="#stats" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Some
@@ -88,155 +100,180 @@
 
         <!-- Navbar on small screens -->
         <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-            <a href="#searchschool" class="w3-bar-item w3-button w3-padding-large">Search your school</a>
-            <a href="#density" class="w3-bar-item w3-button w3-padding-large">School density</a>
-            <a href="#stats" class="w3-bar-item w3-button w3-padding-large">Some statistics</a>
-            <a href="#openstreetmap" class="w3-bar-item w3-button w3-padding-large">Places nearby</a>
-            <a href="#networking" class="w3-bar-item w3-button w3-padding-large">School Networking</a>
+            <a href="#searchschool" class="w3-bar-item w3-button w3-padding-large">Cerca Scuola</a>
+            <a href="#density" class="w3-bar-item w3-button w3-padding-large">Studenti</a>
+            <a href="#stats" class="w3-bar-item w3-button w3-padding-large">Statistiche</a>
+            <a href="#openstreetmap" class="w3-bar-item w3-button w3-padding-large">Nei dintorni</a>
+            <a href="#networking" class="w3-bar-item w3-button w3-padding-large">Trasporti</a>
         </div>
     </div>
 
 
     <!-- Header -->
     <header class="w3-center w3-container w3-white-text" style="padding:128px 16px; position:relative;">
-        <h1 class="w3-margin w3-jumbo">SCHOOLS IN TRENTINO</h1>
-        <p class="w3-xlarge">A Geospatial Analysis Project</p>
+        <h1 class="w3-margin w3-jumbo">Scuole in Trentino</h1>
+        <p class="w3-xlarge">Progetto di Geospatial Analysis</p>
         <div id="particles-js"></div>
         <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
         <script src="particles.js"></script>
 
     </header>
-    <!-- First Grid -->
-    <div id="searchschool" class="w3-row-padding w3-padding-64 w3-container">
-        <div class="w3-content">
-            <div class="w3-twothird">
-                <div id="map_39927471e1a14d2089d9d7b2b7ff3e10"></div>
-            </div>
-            <div class="w3-third w3-right">
-                <h1>Lorem Ipsum</h1>
-                <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
+    <section>
+        <!-- First Grid -->
+        <div id="searchschool" class="w3-row-padding white w3-padding-64 w3-container">
+            <div class="content">
+                <div class="right">
+                    <h1>Lorem Ipsum</h1>
+                    <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
 
-                <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                    consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco
-                    laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Second Grid -->
-    <div id="density" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-        <div class="w3-content">
-            <div class="w3-third w3-center">
-                <i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i>
-            </div>
-
-            <div class="w3-twothird">
-                <h1>Lorem Ipsum</h1>
-                <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
-
-                <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                    consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco
-                    laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
+                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Ut
+                        enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <iframe src="viz/schools_cluster.html"></iframe>
             </div>
         </div>
-    </div>
 
-    <!-- Third Grid -->
-    <div id="stats" class="w3-row-padding w3-padding-64 w3-container">
-        <div class="w3-content">
-            <div class="w3-twothird">
-                <h1>Lorem Ipsum</h1>
-                <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
+        <!-- Second Grid -->
+        <div id="density" class="w3-row-padding light-grey w3-padding-64 w3-container">
+            <div class="content">
+                <div class="content">
+                    <div class="right">
+                        <h1>Lorem Ipsum</h1>
+                        <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                            eiusmod
+                            tempor
+                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                            exercitation
+                            ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
 
-                <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                    consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco
-                    laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-
-            <div class="w3-third w3-center">
-                <i class="fa fa-anchor w3-padding-64 w3-text-red"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Fourth Grid -->
-    <div id="openstreetmap" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-        <div class="w3-content">
-            <div class="w3-third w3-center">
-                <i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i>
-            </div>
-
-            <div class="w3-twothird">
-                <h1>Lorem Ipsum</h1>
-                <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
-
-                <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                    consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco
-                    laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                            tempor
+                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                            exercitation
+                            ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
+                            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+                            laborum
+                            consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                            aliqua.
+                            Ut
+                            enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                    <div>
+                        <iframe src="viz/students_population.html"></iframe>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Fifth Grid -->
-    <div id="networking" class="w3-row-padding w3-padding-64 w3-container">
-        <div class="w3-content">
-            <div class="w3-twothird">
-                <h1>Lorem Ipsum</h1>
-                <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
-
-                <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                    consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco
-                    laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-
-            <div class="w3-third w3-center">
-                <i class="fa fa-anchor w3-padding-64 w3-text-red"></i>
+        <!-- Third Grid -->
+        <div id="stats" class="w3-row-padding white w3-padding-64 w3-container">
+            <div class="content">
+                <div class="right">
+                    <h1>Lorem Ipsum</h1>
+                    <select id="choose-school" onchange="choose_school()" value=0></select>
+                    <select id="choose-transport" onchange="update_route_isochrone()" value="walk">
+                        <option value="walk" selected>A piedi</option>
+                        <option value="bike">In bici</option>
+                        <option value="drive_service">In auto</option>
+                    </select>
+                </div>
+                <iframe id="route-isochrone" src="viz/isochrones/route/walk/0.html"></iframe>
             </div>
         </div>
-    </div>
 
+        <!-- Fourth Grid -->
+        <div id="openstreetmap" class="w3-row-padding light-grey w3-padding-64 w3-container">
+            <div class="content">
+                <div class="w3-third w3-center">
+                    <i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i>
+                </div>
+
+                <div class="w3-twothird">
+                    <h1>Lorem Ipsum</h1>
+                    <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
+
+                    <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
+                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Ut
+                        enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fifth Grid -->
+        <div id="networking" class="w3-row-padding white w3-padding-64 w3-container">
+            <div class="content">
+                <div class="w3-twothird">
+                    <h1>Lorem Ipsum</h1>
+                    <h5 class="w3-padding-32">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat.</h5>
+
+                    <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                        tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
+                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Ut
+                        enim ad minim veniam, quis nostrud exercitation ullamco
+                        laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+
+                <div class="w3-third w3-center">
+                    <i class="fa fa-anchor w3-padding-64 w3-text-red"></i>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="w3-container w3-padding-64 w3-center w3-opacity">
-        <div class="w3-xlarge w3-padding-32">
-            <a href="https://github.com/AuroraArctic" target="_blank"><i class="fa fa-github w3-hover-opacity"></i></a>
+        <div class="w3-xlarge">
+            <a href="https://github.com/AuroraArctic/TrentinoSchools" target="_blank"><i
+                    class="fa fa-github w3-hover-opacity"></i></a>
             <a href="https://www.linkedin.com/in/aurora-maria-tumminello/" target="_blank"><i
                     class="fa fa-linkedin w3-hover-opacity"></i></a>
         </div>
-        <p>Aurora Maria Tumminello<br>University of Trento</p>
+        <p>Aurora Maria Tumminello<br>Università degli Studi di Trento</p>
     </footer>
 
-
+    <script>
+        $.get("data/schools_list_for_select.json",
+            function (data, error) {
+                if (error) {
+                    console.log(error);
+                }
+                var options = JSON.parse(JSON.stringify(data));
+                for (i in options) {
+                    if (i == 0) {
+                        $("#choose-school").append('<option value="' + i + '" selected>' + options[i] + '</option>');
+                    } else {
+                        $("#choose-school").append('<option value="' + i + '">' + options[i] + '</option>');
+                    }
+                }
+            });
+    </script>
 </body>
 
 </html>

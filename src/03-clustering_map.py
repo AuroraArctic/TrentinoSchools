@@ -80,7 +80,7 @@ trentino = trentino.to_crs(4326)
 trentino = trentino.dissolve(by="COD_PROV")
 # %%
 # CLUSTERING MAP
-map = folium.Map(location=[46.0904, 11.14], zoom_start=10, tiles=None)
+map = folium.Map(location=[46.0904, 11.14], zoom_start=9, tiles=None)
 
 # Adding layers
 folium.TileLayer("cartodbpositron", name="Light").add_to(map)
