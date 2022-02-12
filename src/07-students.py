@@ -124,6 +124,10 @@ stud_agg = stud_agg.reset_index()
 from geojson import FeatureCollection
 resume_schools_municipalities = gpd.GeoDataFrame.from_features(FeatureCollection(geo_data))
 resume_schools_municipalities.rename(columns = {'population':'Popolazione'}, inplace=True)
+resume_schools_municipalities = resume_schools_municipalities.set_crs("EPSG:4326")
+resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality.geojson")
+resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality", driver="ESRI Shapefile")
+
 
 resume_schools_municipalities['Studenti'] = resume_schools_municipalities['Studenti'].astype("Int64")
 resume_schools_municipalities['Classi'] = resume_schools_municipalities['Classi'].astype("Int64")
@@ -132,9 +136,6 @@ resume_schools_municipalities['Media studenti per classe'] = resume_schools_muni
 resume_schools_municipalities['Media studenti per scuola'] = resume_schools_municipalities['Media studenti per scuola'].astype("Float64")
 
 resume_schools_municipalities.drop(resume_schools_municipalities[resume_schools_municipalities['Studenti'].isna()].index, inplace=True)
-resume_schools_municipalities = resume_schools_municipalities.set_crs("EPSG:4326")
-
-resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality.geojson")
 #%%
 #%%
 # MAP

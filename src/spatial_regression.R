@@ -6,7 +6,7 @@ library(sf)
 
 # Change working directory
 getwd()
-
+setwd("G:/Il mio Drive/2nd Year/Geospatial/TrentinoSchools/src")
 
 # Import and try to change CRS
 # Read municipality data
@@ -35,7 +35,7 @@ points(df@coords, col = "cornflowerblue", cex = 1, pch = 1)
 # TODO: Animation of Trentino school network based on the number of neighbours
 # KNN
 knn = c()
-for(i in 2:10){
+for(i in 1:10){
     knn <- append(knn,
                   knn2nb(knearneigh(coordinates(df),
                                     k = i,

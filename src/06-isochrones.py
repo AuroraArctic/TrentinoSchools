@@ -118,16 +118,23 @@ for i in range(len(network_type)):
 
 # Iterates over the schools and generates 3 isochrones: walk, bike and drive
 def generate_route_isochrones(df):
-    for index in list(df.index):
-        # Configure the place, network type, trip times, and travel speed
-        place = schools.loc[index, 'geometry']
-        Gs = [get_graph(place, x) for x in network_type]
-        for i in range(len(network_type)):
-            get_folium_route_time_distance_map(Gs[i], place, trip_times, colors).save("../viz/isochrones/route/"+
-                                                                network_type[i]+"/"+str(
-                                                                schools.loc[index,'index'])+".html")
+    for index in list(df.index)[121:]:
+        try:
+            # Configure the place, network type, trip times, and travel speed
+            place = schools.loc[index, 'geometry']
+            Gs = [get_graph(place, x) for x in network_type]
+            for i in range(len(network_type)):
+                get_folium_route_time_distance_map(Gs[i], place, trip_times, colors).save("../viz/isochrones/route/"+
+                                                                    network_type[i]+"/"+str(
+                                                                    schools.loc[index,'index'])+".html")
+        except ValueError:
+            print(index)
+            continue
         
 generate_route_isochrones(schools)
 
 #%%
 # Create polygons and add some markers for POIs
+place = schools.loc[44, 'geometry']
+G = get_graph(place,'bike')
+get_folium_route_time_distance_map(G, place, trip_times, colors)
