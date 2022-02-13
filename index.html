@@ -71,12 +71,7 @@
         function update_route_isochrone() {
             transport = $("#choose-transport :selected").val();
             school = $("#choose-school :selected").val();
-            console.log(transport);
-            console.log(school);
             $("#route-isochrone").attr("src", "viz/isochrones/route/" + transport + "/" + school + ".html");
-            // transport = document.getElementById("choose-transport").value
-            // school = document.getElementById("choose-school").value
-            // document.getElementById("route-isochrone").src = "viz/isochrones/route/" + path + "/" + school + ".html"
         }
     </script>
 
@@ -99,7 +94,7 @@
         </div>
 
         <!-- Navbar on small screens -->
-        <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+        <div id="navDemo" class="bar-block white hide hide-large hide-medium large">
             <a href="#searchschool" class="w3-bar-item w3-button w3-padding-large">Cerca Scuola</a>
             <a href="#density" class="w3-bar-item w3-button w3-padding-large">Studenti</a>
             <a href="#stats" class="w3-bar-item w3-button w3-padding-large">Statistiche</a>
@@ -114,7 +109,7 @@
         <h1 class="w3-margin w3-jumbo">Scuole in Trentino</h1>
         <p class="w3-xlarge">Progetto di Geospatial Analysis</p>
         <div id="particles-js"></div>
-        <script src="https://raw.githubusercontent.com/VincentGarreau/particles.js/master/particles.min.js"></script>
+        <script type="text/javascript" src="particles.min.js"></script>
         <script src="particles.js"></script>
 
     </header>
