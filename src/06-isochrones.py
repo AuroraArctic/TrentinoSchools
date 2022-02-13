@@ -118,7 +118,7 @@ for i in range(len(network_type)):
 
 # Iterates over the schools and generates 3 isochrones: walk, bike and drive
 def generate_route_isochrones(df):
-    for index in list(df.index)[121:]:
+    for index in list(df.index)[229:]:
         try:
             # Configure the place, network type, trip times, and travel speed
             place = schools.loc[index, 'geometry']
