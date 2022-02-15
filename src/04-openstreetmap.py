@@ -54,18 +54,51 @@ cycle_net = osm.get_network(network_type="cycling")
 nature = osm.get_natural()
 nature.explore()
 ax = nature.plot(column='natural', markersize=3, figsize=(12, 12), legend=True,
-               legend_kwds=dict(loc='upper left', ncol=5, bbox_to_anchor=(1, 1)))
+                 legend_kwds=dict(loc='upper left', ncol=5, bbox_to_anchor=(1, 1)))
 plt.show()
-#%%
-custom_filter = {'amenity': True}
+# %%
+custom_filter = {'amenity': True, 
+                 'shop' : True,
+                 'tourism': True,
+                 'leisure': True}
 pois = osm.get_pois(custom_filter)
+
+# %%
+pois = pois[['lat', 'lon', 'name', 'amenity','shop','tourism',
+             'leisure', 'opening_hours','phone', 'website',
+             'internet_access', 'geometry']]
+
+pois['category'] = pois['amenity'].fillna(pois['shop']).fillna(pois['tourism']).fillna(pois['leisure'])
+pois.drop(['amenity','shop','tourism', 'leisure'], axis=1, inplace=True)
+# %%
+def categorize(type):
+    if type in ['bus_station']:
+        return "Bus"
+    elif type in ['bar', 'cafe', 'restaurant', 'restaurant;bar', 
+                  'restaurant;cafe', 'fast_food','food_court',
+                  'ice_cream', 'supermarket',]:
+        return "Food"
+    elif type in ['childcare', 'clinic', 'dentist', 'doctors', 'hospital', 'pharmacy']:
+        return "Healthcare"
+    elif type in ['training','gym','ski_school','sailing_school']:
+        return "Sport"
+    elif type in ['theatre','museum','arts_centre','cinema','library', 'zoo', 'planetarium']:
+        return "Culture"
+    elif type in ["typography",'tipography','drinking_water','stationery', 'copyshop','printing']:
+        return "Utilities"
+    elif type in ['outdoor']
+
+set(pois['category'])
+pois['type'] = [categorize(x) for x in pois['category']]
 # %%
 if not os.path.exists("../data/amenity_classification.csv"):
-    pd.DataFrame(set(pois['amenity'])).to_csv("../data/amenity_classification.csv",index=False)
+    pd.DataFrame(set(pois['amenity'])).to_csv(
+        "../data/amenity_classification.csv", index=False)
 else:
     classification = pd.read_csv("../data/amenity_classification.csv")
 # Manual insertion of the classification with -1, 0 and 1
-pois = pd.merge(pois[['amenity','geometry']], classification, how="inner",on='amenity')
+pois = pd.merge(pois[['amenity', 'geometry']],
+                classification, how="inner", on='amenity')
 pois['classification'] = pd.Categorical(pois['classification'], ordered=True)
 pois = gpd.GeoDataFrame(pois)
 # %%
@@ -75,7 +108,7 @@ ax = pois.plot(column='classification', markersize=3, figsize=(12, 12), legend=T
 plt.show()
 # %%
 # TASKS
-# 1. Get all points around 500 meters from every school 
+# 1. Get all points around 500 meters from every school
 # 2. Color schools in blue, good points in green, bad in red, neutral in yellow
 
 # %%
