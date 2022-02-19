@@ -13,9 +13,11 @@ from shapely.geometry import Point
 schools = gpd.read_file(
     "../data/Trentino/schools/schools.geojson", geometry="geometry")
 
-# Save list for the website, in order to choose the school
-schools['Nome'].to_json("../data/schools_list_for_select.json")
+schools['Descrizione'] = schools['Nome']+" - "+ schools['Indirizzo'] + ", " + schools['Comune']
 
+# Save list for the website, in order to choose the school
+schools['Descrizione'].to_json("../data/schools_list_for_select.json")
+schools.drop(["Descrizione"], axis=1, inplace=True)
 index = 0
 place = schools.loc[index, 'geometry']
 network_type = ['walk', 'bike', 'drive_service']

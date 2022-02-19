@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display">
@@ -21,12 +22,13 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
         integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
         integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/aef6d5743a.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -41,14 +43,20 @@
 
         function update_route_isochrone() {
             school = $("#choose-school :selected").val();
-            $("#pois").attr("src", "viz/pois/"+ school + ".html");
+            $("#pois").attr("src", "viz/pois/" + school + ".html");
         }
 
         function update_route_isochrone() {
-            transport = $("#choose-transport :selected").val();
+            transport = $("input[name='choose-transport']:checked").val();
             school = $("#choose-school :selected").val();
             $("#route-isochrone").attr("src", "viz/isochrones/route/" + transport + "/" + school + ".html");
         }
+
+        $(document).ready(function () {
+            $('#choose-school').selectize({
+                sortField: 'text'
+            });
+        });
     </script>
 
     <!-- Navbar -->
@@ -81,10 +89,11 @@
 
 
     <!-- Header -->
-    <header class="w3-center w3-container w3-white-text" style="padding:128px 16px; position:relative;">
-        <h1 class="w3-margin w3-jumbo">Scuole in Trentino</h1>
-        <p class="w3-xlarge">Progetto di Geospatial Analysis</p>
-        <div id="particles-js"></div>
+    <header class="center w3-container w3-white-text" style="padding:128px 16px; position:relative;">
+        <div id="particles-js">
+            <h1 class="w3-margin jumbo">Scuole in Trentino</h1>
+            <h4 class="w3-xlarge">Progetto di Geospatial Analysis</h4>
+        </div>
         <script src="particles.min.js"></script>
         <script src="particles.js"></script>
 
@@ -140,12 +149,30 @@
             <div class="content">
                 <div class="right">
                     <h1>Networking</h1>
-                    <select id="choose-school" onchange="choose_school()" value=0></select>
-                    <select id="choose-transport" onchange="update_route_isochrone()" value="walk">
+                    <select id="choose-school" onchange="choose_school()" value=0
+                        placeholder="Cerca la tua scuola..."""></select>
+                    <!-- <select id="choose-transport" onchange="update_route_isochrone()" value="walk">
                         <option value="walk" selected>A piedi</option>
                         <option value="bike">In bici</option>
                         <option value="drive_service">In auto</option>
-                    </select>
+                    </select> -->
+                    <!-- Let's try with icons -->
+                    <form id="choose-transport" onchange="update_route_isochrone()" value="walk">
+                        <label>
+                            <input type="radio" name="test" value="walk" checked>
+                            <i class="fa-solid fa-person-walking"></i>
+                        </label>
+                        <label>
+                            <input type="radio" name="test" value="bike">
+                            <i class="fa fa-bicycle" aria-hidden="true"></i>
+                        </label>
+                        <label>
+                            <input type="radio" name="test" value="drive_service">
+                            <i class="fa fa-car" aria-hidden="true"></i>
+                        </label>
+                    </form>
+
+
                 </div>
                 <iframe id="route-isochrone" src="viz/isochrones/route/walk/0.html"></iframe>
             </div>
