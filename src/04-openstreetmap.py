@@ -464,6 +464,7 @@ def create_school_pois_map(p, pois, icons):
     return m
 
 #%%
-for i in range(24,len(schools)):
+# Generate map for all schools
+for i in range(len(schools)):
     create_school_pois_map(schools.iloc[i],pois,icons).save("../viz/pois/"+str(i)+".html")
     

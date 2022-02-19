@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e3808092a45845b6ad6fb13629bc750c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_e3808092a45845b6ad6fb13629bc750c" ></div>
+        
+</body>
+<script>    
+    
+            var map_e3808092a45845b6ad6fb13629bc750c = L.map(
+                "map_e3808092a45845b6ad6fb13629bc750c",
+                {
+                    center: [46.39986204, 11.02184554],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 16,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var feature_group_ee1fa22bd04c402eb480a52442a3716e = L.featureGroup(
+                {}
+            ).addTo(map_e3808092a45845b6ad6fb13629bc750c);
+        
+    
+            var marker_6ae836640e0c464ba77c55d9db15551d = L.marker(
+                [46.39814, 11.022163],
+                {}
+            ).addTo(feature_group_ee1fa22bd04c402eb480a52442a3716e);
+        
+    
+            var icon_d41b08c39ef1425bbb2de366c26de0d6 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_6ae836640e0c464ba77c55d9db15551d.setIcon(icon_d41b08c39ef1425bbb2de366c26de0d6);
+        
+    
+        var popup_879c3eece68a48428aac204e1256fde1 = L.popup({"maxWidth": 200});
+
+        
+            var html_8851db51c6664c5c81ce745b6ef748e4 = $(`<div id="html_8851db51c6664c5c81ce745b6ef748e4" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Varollo</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>4 min 14 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>254m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_879c3eece68a48428aac204e1256fde1.setContent(html_8851db51c6664c5c81ce745b6ef748e4);
+        
+
+        marker_6ae836640e0c464ba77c55d9db15551d.bindPopup(popup_879c3eece68a48428aac204e1256fde1)
+        ;
+
+        
+    
+    
+            var marker_7de7838d60894861974f332d68f12434 = L.marker(
+                [46.39986204, 11.02184554],
+                {"name": "Scuola Primaria Varollo Livo \"Chiara Lubich\""}
+            ).addTo(map_e3808092a45845b6ad6fb13629bc750c);
+        
+    
+            var icon_29b584ff19e94d90943f1c6deb5a2832 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "graduation-cap", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_7de7838d60894861974f332d68f12434.setIcon(icon_29b584ff19e94d90943f1c6deb5a2832);
+        
+    
+        var popup_616bf96e26fe46a3afcd6c17101a0742 = L.popup({"maxWidth": 300});
+
+        
+            var html_c871277a0ec04ae3bd5b1fddce4dffae = $(`<div id="html_c871277a0ec04ae3bd5b1fddce4dffae" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Scuola Primaria Varollo Livo "Chiara Lubich"</h4>             <table style="height: 150px; width: 280px; font-family: 'Roboto', sans-serif; padding:5px; word-wrap: break-all;">             <tbody>                              <tr>                         <td><b>Istituto</b></td>                         <td>Istituto Comprensivo Cles "B. Clesio"</td>                     </tr>                                      <tr>                         <td><b>Tipo Istituto</b></td>                         <td>Scuola Primaria</td>                     </tr>                                      <tr>                         <td><b>Gestione</b></td>                         <td>Statale</td>                     </tr>                                      <tr>                         <td><b>Indirizzo</b></td>                         <td>Frazione Livo,  92</td>                     </tr>                                      <tr>                         <td><b>Comune</b></td>                         <td>Livo</td>                     </tr>                                      <tr>                         <td><b>CAP</b></td>                         <td>38020</td>                     </tr>                                  <tr>                     <td><b>Telefono</b></td>                     <td><a href = "tel:0463/421457" target="_blank">0463/421457</a></td>                 </tr>                                  <tr>                     <td><b>Fax</b></td>                     <td><a href = "tel:0463/424830" target="_blank">0463/424830</a></td>                 </tr>                                  <tr>                     <td><b>Email istituto</b></td>                     <td><a href = "mailto:ic.cles@pec.provincia.tn.it" target="_blank">ic.cles@pec.provincia.tn.it</a></td>                 </tr>                                  <tr>                     <td><b>Email segreteria</b></td>                     <td><a href = "mailto:segr.ic.cles@scuole.provincia.tn.it" target="_blank">segr.ic.cles@scuole.provincia.tn.it</a></td>                 </tr>                                  <tr>                     <td><b>Sito web</b></td>                     <td style="word-break: break-all; padding: 0 10px 0 0;"><a href = "https://www.iccles.it" target="_blank">www.iccles.it</a></td>                 </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_616bf96e26fe46a3afcd6c17101a0742.setContent(html_c871277a0ec04ae3bd5b1fddce4dffae);
+        
+
+        marker_7de7838d60894861974f332d68f12434.bindPopup(popup_616bf96e26fe46a3afcd6c17101a0742)
+        ;
+
+        
+    
+    
+            marker_7de7838d60894861974f332d68f12434.bindTooltip(
+                `<div>
+                     Scuola Primaria Varollo Livo "Chiara Lubich"
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var feature_group_b9b013062a154ec8af808ce058cd3635 = L.featureGroup(
+                {}
+            ).addTo(map_e3808092a45845b6ad6fb13629bc750c);
+        
+    
+        function geo_json_9fb867e25ff140b19d1da60eca117522_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#fecc5cFF", "fillColor": "#fecc5cFF"};
+            }
+        }
+
+        function geo_json_9fb867e25ff140b19d1da60eca117522_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_9fb867e25ff140b19d1da60eca117522 = L.geoJson(null, {
+                onEachFeature: geo_json_9fb867e25ff140b19d1da60eca117522_onEachFeature,
+            
+                style: geo_json_9fb867e25ff140b19d1da60eca117522_styler,
+        });
+
+        function geo_json_9fb867e25ff140b19d1da60eca117522_add (data) {
+            geo_json_9fb867e25ff140b19d1da60eca117522
+                .addData(data)
+                .addTo(feature_group_b9b013062a154ec8af808ce058cd3635);
+        }
+            geo_json_9fb867e25ff140b19d1da60eca117522_add({"features": [{"geometry": {"coordinates": [[[11.028345729450303, 46.3997468879281], [11.028298089192713, 46.39930665701419], [11.02818830941998, 46.3988717763718], [11.0280174487793, 46.398446433941], [11.027787154026655, 46.39803472571412], [11.027499644118674, 46.397640616300194], [11.027157688800926, 46.397267900757655], [11.02676458190042, 46.396920168062465], [11.026324109580809, 46.39660076656263], [11.025840513866937, 46.39631277175131], [11.02531845179047, 46.39605895666808], [11.024762950550109, 46.3958417652125], [11.024179359117854, 46.395663288626444], [11.023573296756554, 46.39552524537081], [11.022950598943352, 46.39542896458988], [11.02231726121829, 46.395375373321976], [11.021679381497007, 46.395364987579235], [11.021043101401053, 46.395397907381906], [11.020414547168684, 46.39547381579521], [11.019799770712954, 46.39559198197766], [11.019204691392567, 46.39575126821192], [11.018635039054182, 46.39595014085048], [11.018096298892837, 46.396186685071605], [11.017593658659885, 46.39645862330347], [11.017131958725601, 46.3967633371401], [11.016715645476442, 46.397097892538525], [11.016348728495343, 46.39745906805535], [11.01603474193731, 46.39784338585144], [11.015776710472693, 46.398247145167076], [11.01557712012693, 46.39866645794574], [11.015437894298755, 46.39909728626409], [11.015360375189397, 46.39953548120837], [11.015345310823415, 46.39997682282301], [11.015392847788203, 46.40041706074731], [11.015502529764278, 46.40085195514859], [11.015673301862714, 46.40127731755804], [11.015903520730157, 46.40168905121558], [11.016190970326207, 46.402083190534874], [11.01653288322304, 46.402455939308226], [11.016925967223868, 46.402803707282686], [11.017366437045057, 46.40312314475445], [11.017850050757772, 46.40341117484797], [11.01837215063867, 46.40366502316781], [11.018927708036243, 46.40388224453713], [11.019511371820398, 46.404060746564504], [11.020117519947846, 46.404198809811334], [11.0207403136455, 46.40429510436509], [11.021373753688527, 46.40434870265816], [11.022011738229272, 46.404359088408455], [11.02264812161803, 46.4043261615954], [11.023276773647057, 46.404250239423206], [11.023891638645033, 46.404132053262096], [11.024486793850624, 46.40397274159719], [11.025056506500942, 46.40377383905325], [11.025595289083194, 46.40353726160129], [11.026097952215821, 46.40326528809017], [11.026559654648528, 46.40296053828162], [11.026975949898839, 46.402625947600995], [11.027342829075504, 46.402264738847556], [11.027656759476326, 46.40188039113773], [11.027914718589042, 46.40147660638076], [11.028114223168659, 46.401057273610924], [11.028253353112387, 46.40062643151974], [11.028330769903778, 46.40018822955029], [11.028345729450303, 46.3997468879281]]], "type": "Polygon"}, "id": "0", "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            var tile_layer_0e8ca0535d1049459523ca45bf9d1f53 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_e3808092a45845b6ad6fb13629bc750c);
+        
+    
+            var tile_layer_1e9b204c9ef14133ae2555b98a0660f8 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_e3808092a45845b6ad6fb13629bc750c);
+        
+    
+            var tile_layer_a832bb8dced04e0ba5034f5ad36d513f = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_e3808092a45845b6ad6fb13629bc750c);
+        
+    
+            var layer_control_fbed2fe742534b0eb538cea48d7d2281 = {
+                base_layers : {
+                    "Light" : tile_layer_0e8ca0535d1049459523ca45bf9d1f53,
+                    "Dark" : tile_layer_1e9b204c9ef14133ae2555b98a0660f8,
+                    "OpenStreetMap" : tile_layer_a832bb8dced04e0ba5034f5ad36d513f,
+                },
+                overlays :  {
+                    "Trasporti" : feature_group_ee1fa22bd04c402eb480a52442a3716e,
+                    "Dintorni" : feature_group_b9b013062a154ec8af808ce058cd3635,
+                },
+            };
+            L.control.layers(
+                layer_control_fbed2fe742534b0eb538cea48d7d2281.base_layers,
+                layer_control_fbed2fe742534b0eb538cea48d7d2281.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_e3808092a45845b6ad6fb13629bc750c);
+            tile_layer_1e9b204c9ef14133ae2555b98a0660f8.remove();
+            tile_layer_a832bb8dced04e0ba5034f5ad36d513f.remove();
+        
+</script>

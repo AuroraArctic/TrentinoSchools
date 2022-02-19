@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_db9c5efc757b449680ed882855b6b8d6 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_db9c5efc757b449680ed882855b6b8d6" ></div>
+        
+</body>
+<script>    
+    
+            var map_db9c5efc757b449680ed882855b6b8d6 = L.map(
+                "map_db9c5efc757b449680ed882855b6b8d6",
+                {
+                    center: [46.04677001761587, 11.137760035292132],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 16,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var feature_group_5e3005950cf7464d8889eed1707fdb4c = L.featureGroup(
+                {}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var marker_5f5348f4b354408c97592abe1a5da250 = L.marker(
+                [46.047245025634766, 11.133005142211914],
+                {}
+            ).addTo(feature_group_5e3005950cf7464d8889eed1707fdb4c);
+        
+    
+            var icon_6c872e0d42c0435b91e78b53a1720073 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cutlery", "iconColor": "white", "markerColor": "lightred", "prefix": "fa"}
+            );
+            marker_5f5348f4b354408c97592abe1a5da250.setIcon(icon_6c872e0d42c0435b91e78b53a1720073);
+        
+    
+        var popup_5e4fb6d281c241ffa8d44d108e51285d = L.popup({"maxWidth": 200});
+
+        
+            var html_e05c838a03c741978f07b0300fe61bdc = $(`<div id="html_e05c838a03c741978f07b0300fe61bdc" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">UniBAR</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Bar</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Ristorazione</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>17 min 24 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1044m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_5e4fb6d281c241ffa8d44d108e51285d.setContent(html_e05c838a03c741978f07b0300fe61bdc);
+        
+
+        marker_5f5348f4b354408c97592abe1a5da250.bindPopup(popup_5e4fb6d281c241ffa8d44d108e51285d)
+        ;
+
+        
+    
+    
+            var feature_group_513d719e3d8c47b5bd307a1ed361fc0d = L.featureGroup(
+                {}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var marker_fc76620002ff4e4296edd105601b73c9 = L.marker(
+                [46.044416350000006, 11.137222900000001],
+                {}
+            ).addTo(feature_group_513d719e3d8c47b5bd307a1ed361fc0d);
+        
+    
+            var icon_de0d5c39f1cb4cbf9870527dc495d2d1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bicycle", "iconColor": "white", "markerColor": "orange", "prefix": "fa"}
+            );
+            marker_fc76620002ff4e4296edd105601b73c9.setIcon(icon_de0d5c39f1cb4cbf9870527dc495d2d1);
+        
+    
+        var popup_3b4b954bd6b845fca9ed71fa12240d2d = L.popup({"maxWidth": 200});
+
+        
+            var html_153956183576482a9c86fe66718dd006 = $(`<div id="html_153956183576482a9c86fe66718dd006" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Campo da gioco</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Campo da gioco</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Sport</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>8 min 22 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>502m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_3b4b954bd6b845fca9ed71fa12240d2d.setContent(html_153956183576482a9c86fe66718dd006);
+        
+
+        marker_fc76620002ff4e4296edd105601b73c9.bindPopup(popup_3b4b954bd6b845fca9ed71fa12240d2d)
+        ;
+
+        
+    
+    
+            var marker_1073c21caf084bb5a3f6544ceda99065 = L.marker(
+                [46.04784465, 11.132932699999994],
+                {}
+            ).addTo(feature_group_513d719e3d8c47b5bd307a1ed361fc0d);
+        
+    
+            var icon_bb4862be8ecf473caf8396bdd877fa73 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bicycle", "iconColor": "white", "markerColor": "orange", "prefix": "fa"}
+            );
+            marker_1073c21caf084bb5a3f6544ceda99065.setIcon(icon_bb4862be8ecf473caf8396bdd877fa73);
+        
+    
+        var popup_20c8bd267bda407c8cd9fdfb7d4245d0 = L.popup({"maxWidth": 200});
+
+        
+            var html_17f78bd9a6524368914eafe02ec54cee = $(`<div id="html_17f78bd9a6524368914eafe02ec54cee" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Sanba Basketball outdoor court</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                          <tr>                     <td><b>Sito web</b></td>                     <td style="word-break: break-all;"><a href = "https://https://www.operauni.tn.it/cms-01.00/articolo.asp?IDcms=2978&s=122&l=" target="_blank">https://www.operauni.tn.it/cms-01.00/articolo.asp?IDcms=2978&s=122&l=</a></td>                 </tr>                                      <tr>                         <td><b>Luogo</b></td>                         <td>Campo da gioco</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Sport</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>16 min 56 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1016m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_20c8bd267bda407c8cd9fdfb7d4245d0.setContent(html_17f78bd9a6524368914eafe02ec54cee);
+        
+
+        marker_1073c21caf084bb5a3f6544ceda99065.bindPopup(popup_20c8bd267bda407c8cd9fdfb7d4245d0)
+        ;
+
+        
+    
+    
+            var marker_9795141ca1a042e99902ec6f0b42a9d7 = L.marker(
+                [46.0476543, 11.1327346],
+                {}
+            ).addTo(feature_group_513d719e3d8c47b5bd307a1ed361fc0d);
+        
+    
+            var icon_d75795b80154403492876cc53f9a3c96 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bicycle", "iconColor": "white", "markerColor": "orange", "prefix": "fa"}
+            );
+            marker_9795141ca1a042e99902ec6f0b42a9d7.setIcon(icon_d75795b80154403492876cc53f9a3c96);
+        
+    
+        var popup_a09fb5ecbe4d453190e85fe00a8c0f1c = L.popup({"maxWidth": 200});
+
+        
+            var html_31c016ce32a24fb6bfdae66c3787a579 = $(`<div id="html_31c016ce32a24fb6bfdae66c3787a579" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Campo da gioco</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Campo da gioco</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Sport</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>17 min 19 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1039m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_a09fb5ecbe4d453190e85fe00a8c0f1c.setContent(html_31c016ce32a24fb6bfdae66c3787a579);
+        
+
+        marker_9795141ca1a042e99902ec6f0b42a9d7.bindPopup(popup_a09fb5ecbe4d453190e85fe00a8c0f1c)
+        ;
+
+        
+    
+    
+            var marker_4c2ee117a5394493ad917ed6df265878 = L.marker(
+                [46.047775099999996, 11.13257838441351],
+                {}
+            ).addTo(feature_group_513d719e3d8c47b5bd307a1ed361fc0d);
+        
+    
+            var icon_00b5ea4b0c224eb5b74626cbb57cb464 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bicycle", "iconColor": "white", "markerColor": "orange", "prefix": "fa"}
+            );
+            marker_4c2ee117a5394493ad917ed6df265878.setIcon(icon_00b5ea4b0c224eb5b74626cbb57cb464);
+        
+    
+        var popup_8e956eafac1d4df084aa720dbcc8890b = L.popup({"maxWidth": 200});
+
+        
+            var html_bcd9dc1555ef49419c8d6972b0655f68 = $(`<div id="html_bcd9dc1555ef49419c8d6972b0655f68" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Campo da gioco</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Campo da gioco</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Sport</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>17 min 19 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1039m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_8e956eafac1d4df084aa720dbcc8890b.setContent(html_bcd9dc1555ef49419c8d6972b0655f68);
+        
+
+        marker_4c2ee117a5394493ad917ed6df265878.bindPopup(popup_8e956eafac1d4df084aa720dbcc8890b)
+        ;
+
+        
+    
+    
+            var marker_fe0c8d2f2b4948bfb3a004d27fefe630 = L.marker(
+                [46.04375735, 11.142115302011494],
+                {}
+            ).addTo(feature_group_513d719e3d8c47b5bd307a1ed361fc0d);
+        
+    
+            var icon_a4a5a8637ddb4512994767c034e5cbf7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bicycle", "iconColor": "white", "markerColor": "orange", "prefix": "fa"}
+            );
+            marker_fe0c8d2f2b4948bfb3a004d27fefe630.setIcon(icon_a4a5a8637ddb4512994767c034e5cbf7);
+        
+    
+        var popup_d34e113aff91411ab37c9adb5bb43e51 = L.popup({"maxWidth": 200});
+
+        
+            var html_0bb93c328ace4b29959e364f5e70a6d6 = $(`<div id="html_0bb93c328ace4b29959e364f5e70a6d6" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Piscina</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Piscina</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Sport</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>14 min 50 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>890m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_d34e113aff91411ab37c9adb5bb43e51.setContent(html_0bb93c328ace4b29959e364f5e70a6d6);
+        
+
+        marker_fe0c8d2f2b4948bfb3a004d27fefe630.bindPopup(popup_d34e113aff91411ab37c9adb5bb43e51)
+        ;
+
+        
+    
+    
+            var feature_group_42f80cb70102493e8e342bdb1328029e = L.featureGroup(
+                {}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var marker_4a0eff1d2fee4b48a5283d2f2cc7900b = L.marker(
+                [46.047739954629286, 11.135452347883774],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_9f4093052dab4ddba5de4387501ab0d8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_4a0eff1d2fee4b48a5283d2f2cc7900b.setIcon(icon_9f4093052dab4ddba5de4387501ab0d8);
+        
+    
+        var popup_63d27eee4d954dee96879a82072643f4 = L.popup({"maxWidth": 200});
+
+        
+            var html_5060c5dc0b7649858953a4a3d45a2d19 = $(`<div id="html_5060c5dc0b7649858953a4a3d45a2d19" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Trento S. Bartolameo</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del treno</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>18 min 52 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1132m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_63d27eee4d954dee96879a82072643f4.setContent(html_5060c5dc0b7649858953a4a3d45a2d19);
+        
+
+        marker_4a0eff1d2fee4b48a5283d2f2cc7900b.bindPopup(popup_63d27eee4d954dee96879a82072643f4)
+        ;
+
+        
+    
+    
+            var marker_faba08e8358f43bc8bc0482ec0af9dc4 = L.marker(
+                [46.04477596458574, 11.139431608168818],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_321ca1bb5c3346ce8d9b2f7e99aa6c38 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_faba08e8358f43bc8bc0482ec0af9dc4.setIcon(icon_321ca1bb5c3346ce8d9b2f7e99aa6c38);
+        
+    
+        var popup_45b7a707c0c04b0e878b758f16434bc2 = L.popup({"maxWidth": 200});
+
+        
+            var html_4fffd67e04734e7b82b73d18e2fad57f = $(`<div id="html_4fffd67e04734e7b82b73d18e2fad57f" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del treno</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>8 min 55 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>535m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_45b7a707c0c04b0e878b758f16434bc2.setContent(html_4fffd67e04734e7b82b73d18e2fad57f);
+        
+
+        marker_faba08e8358f43bc8bc0482ec0af9dc4.bindPopup(popup_45b7a707c0c04b0e878b758f16434bc2)
+        ;
+
+        
+    
+    
+            var marker_5e0a252b6b79486799a06463447d4c94 = L.marker(
+                [46.047972, 11.137453],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_937991e5172f4e6d8a441bb839ebfd73 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_5e0a252b6b79486799a06463447d4c94.setIcon(icon_937991e5172f4e6d8a441bb839ebfd73);
+        
+    
+        var popup_e03e80967d6d4d65860e664e26ec6d07 = L.popup({"maxWidth": 200});
+
+        
+            var html_2a4686c147c14388b74105adaf291675 = $(`<div id="html_2a4686c147c14388b74105adaf291675" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Asiago S.Bartolameo</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>4 min 6 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>246m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_e03e80967d6d4d65860e664e26ec6d07.setContent(html_2a4686c147c14388b74105adaf291675);
+        
+
+        marker_5e0a252b6b79486799a06463447d4c94.bindPopup(popup_e03e80967d6d4d65860e664e26ec6d07)
+        ;
+
+        
+    
+    
+            var marker_825ea6cf04ce4b92b54178307fc9ffaf = L.marker(
+                [46.047682, 11.137738],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_31ab33e7289d43d6931b1a34049212b9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_825ea6cf04ce4b92b54178307fc9ffaf.setIcon(icon_31ab33e7289d43d6931b1a34049212b9);
+        
+    
+        var popup_6250799b2c9840e49f387df83839eff2 = L.popup({"maxWidth": 200});
+
+        
+            var html_4e202c9d72a64982bd2e4d17e4ae32f4 = $(`<div id="html_4e202c9d72a64982bd2e4d17e4ae32f4" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Asiago Banala</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>3 min 50 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>230m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_6250799b2c9840e49f387df83839eff2.setContent(html_4e202c9d72a64982bd2e4d17e4ae32f4);
+        
+
+        marker_825ea6cf04ce4b92b54178307fc9ffaf.bindPopup(popup_6250799b2c9840e49f387df83839eff2)
+        ;
+
+        
+    
+    
+            var marker_bbcf05eb49134296b62d8bde60785709 = L.marker(
+                [46.050242, 11.137197],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_87c52060ac58477d9f00523a908fa8ce = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_bbcf05eb49134296b62d8bde60785709.setIcon(icon_87c52060ac58477d9f00523a908fa8ce);
+        
+    
+        var popup_666d20f525124ee0b3e9094740c62abf = L.popup({"maxWidth": 200});
+
+        
+            var html_9e07a472cdc74ef6b1a74efab3d48bd6 = $(`<div id="html_9e07a472cdc74ef6b1a74efab3d48bd6" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Asiago "Cernidor"</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>7 min 57 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>477m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_666d20f525124ee0b3e9094740c62abf.setContent(html_9e07a472cdc74ef6b1a74efab3d48bd6);
+        
+
+        marker_bbcf05eb49134296b62d8bde60785709.bindPopup(popup_666d20f525124ee0b3e9094740c62abf)
+        ;
+
+        
+    
+    
+            var marker_3d4d120e1b8b4a7eb852cc2a05230935 = L.marker(
+                [46.04955, 11.13727],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_87d80b3b51ec459e85fcfff074e72dff = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_3d4d120e1b8b4a7eb852cc2a05230935.setIcon(icon_87d80b3b51ec459e85fcfff074e72dff);
+        
+    
+        var popup_0c866f906c1047deb669ca965eb85642 = L.popup({"maxWidth": 200});
+
+        
+            var html_e8361233f6a545dcb865d9d0dc76ae30 = $(`<div id="html_e8361233f6a545dcb865d9d0dc76ae30" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Asiago "Cernidor"</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>7 min 48 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>468m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_0c866f906c1047deb669ca965eb85642.setContent(html_e8361233f6a545dcb865d9d0dc76ae30);
+        
+
+        marker_3d4d120e1b8b4a7eb852cc2a05230935.bindPopup(popup_0c866f906c1047deb669ca965eb85642)
+        ;
+
+        
+    
+    
+            var marker_e59c058b971942078025497697379d3a = L.marker(
+                [46.048131, 11.143325],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_d101211ad3be4e9da75a7fd08c6cb3d7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_e59c058b971942078025497697379d3a.setIcon(icon_d101211ad3be4e9da75a7fd08c6cb3d7);
+        
+    
+        var popup_625ac60d89ca474aa98e61deaa8f27e4 = L.popup({"maxWidth": 200});
+
+        
+            var html_8ef4a57287014407af94ae2c7b8fa6e9 = $(`<div id="html_8ef4a57287014407af94ae2c7b8fa6e9" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano "Villa De Mersi"</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>13 min 55 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>835m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_625ac60d89ca474aa98e61deaa8f27e4.setContent(html_8ef4a57287014407af94ae2c7b8fa6e9);
+        
+
+        marker_e59c058b971942078025497697379d3a.bindPopup(popup_625ac60d89ca474aa98e61deaa8f27e4)
+        ;
+
+        
+    
+    
+            var marker_def2ee8ed53c4fd2a2ef992032216106 = L.marker(
+                [46.043856, 11.140563],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_bea2e653436a4b9ab91bac82924134f0 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_def2ee8ed53c4fd2a2ef992032216106.setIcon(icon_bea2e653436a4b9ab91bac82924134f0);
+        
+    
+        var popup_2be1b14483a74e0e9244ccc65300c3b1 = L.popup({"maxWidth": 200});
+
+        
+            var html_4cfcdf796acb4ba09329570df085e05f = $(`<div id="html_4cfcdf796acb4ba09329570df085e05f" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano "Villa Tambosi"</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>10 min 13 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>613m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_2be1b14483a74e0e9244ccc65300c3b1.setContent(html_4cfcdf796acb4ba09329570df085e05f);
+        
+
+        marker_def2ee8ed53c4fd2a2ef992032216106.bindPopup(popup_2be1b14483a74e0e9244ccc65300c3b1)
+        ;
+
+        
+    
+    
+            var marker_155cdf415f804f27bc7c77985e061d00 = L.marker(
+                [46.043868, 11.140227],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_2eb2f5608df94ab4b0eabfd5e26e74b7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_155cdf415f804f27bc7c77985e061d00.setIcon(icon_2eb2f5608df94ab4b0eabfd5e26e74b7);
+        
+    
+        var popup_e0c9852ad16c4a3fae76350112f0fe0b = L.popup({"maxWidth": 200});
+
+        
+            var html_91828641875f4c00b9955ff4213dfebc = $(`<div id="html_91828641875f4c00b9955ff4213dfebc" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano "Villa Tambosi"</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>10 min 45 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>645m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_e0c9852ad16c4a3fae76350112f0fe0b.setContent(html_91828641875f4c00b9955ff4213dfebc);
+        
+
+        marker_155cdf415f804f27bc7c77985e061d00.bindPopup(popup_e0c9852ad16c4a3fae76350112f0fe0b)
+        ;
+
+        
+    
+    
+            var marker_da3e5574c4884d8d9d914dce187e5fdb = L.marker(
+                [46.047513, 11.142275],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_6d757be818e8442b9573dbdb5db2c66b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_da3e5574c4884d8d9d914dce187e5fdb.setIcon(icon_6d757be818e8442b9573dbdb5db2c66b);
+        
+    
+        var popup_cb7abe9cbd6e4f7ca50b17ea8e7c29a8 = L.popup({"maxWidth": 200});
+
+        
+            var html_6aa0b914ce4d42e59a873b9ece81df58 = $(`<div id="html_6aa0b914ce4d42e59a873b9ece81df58" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano Banala</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>12 min 4 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>724m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_cb7abe9cbd6e4f7ca50b17ea8e7c29a8.setContent(html_6aa0b914ce4d42e59a873b9ece81df58);
+        
+
+        marker_da3e5574c4884d8d9d914dce187e5fdb.bindPopup(popup_cb7abe9cbd6e4f7ca50b17ea8e7c29a8)
+        ;
+
+        
+    
+    
+            var marker_3f530bd3fc144465a45b0fda721c6263 = L.marker(
+                [46.044758, 11.139687],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_5b5c3574423d499bb85fe56f341dc779 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_3f530bd3fc144465a45b0fda721c6263.setIcon(icon_5b5c3574423d499bb85fe56f341dc779);
+        
+    
+        var popup_64343deba14846dcb6e38a80c5111135 = L.popup({"maxWidth": 200});
+
+        
+            var html_84011ce4ba6b4c128669a4a55b98acc7 = $(`<div id="html_84011ce4ba6b4c128669a4a55b98acc7" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano "Stazione Fs"</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>8 min 59 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>539m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_64343deba14846dcb6e38a80c5111135.setContent(html_84011ce4ba6b4c128669a4a55b98acc7);
+        
+
+        marker_3f530bd3fc144465a45b0fda721c6263.bindPopup(popup_64343deba14846dcb6e38a80c5111135)
+        ;
+
+        
+    
+    
+            var marker_0d1a1777c12f4521915e451b3494991b = L.marker(
+                [46.044754, 11.139434],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_c1f2de42b72a4e2ba16e0373e12aa2fa = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_0d1a1777c12f4521915e451b3494991b.setIcon(icon_c1f2de42b72a4e2ba16e0373e12aa2fa);
+        
+    
+        var popup_582cb98e841e42deb1fda75becf5d12d = L.popup({"maxWidth": 200});
+
+        
+            var html_c8658a41e5854eaa9056c5cfd453a8eb = $(`<div id="html_c8658a41e5854eaa9056c5cfd453a8eb" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano "Stazione Fs"</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>8 min 55 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>535m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_582cb98e841e42deb1fda75becf5d12d.setContent(html_c8658a41e5854eaa9056c5cfd453a8eb);
+        
+
+        marker_0d1a1777c12f4521915e451b3494991b.bindPopup(popup_582cb98e841e42deb1fda75becf5d12d)
+        ;
+
+        
+    
+    
+            var marker_f751101c261e452292bb8c719e0dcb07 = L.marker(
+                [46.048673, 11.134145],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_4a04f49ffa4b4d5cbb5ade741e03b18f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_f751101c261e452292bb8c719e0dcb07.setIcon(icon_4a04f49ffa4b4d5cbb5ade741e03b18f);
+        
+    
+        var popup_dda19769a4864724b026110bee4e85b9 = L.popup({"maxWidth": 200});
+
+        
+            var html_3c1931affffd4561b656aaf50afd626f = $(`<div id="html_3c1931affffd4561b656aaf50afd626f" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Rsa S.Bartolomeo</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>15 min 3 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>903m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_dda19769a4864724b026110bee4e85b9.setContent(html_3c1931affffd4561b656aaf50afd626f);
+        
+
+        marker_f751101c261e452292bb8c719e0dcb07.bindPopup(popup_dda19769a4864724b026110bee4e85b9)
+        ;
+
+        
+    
+    
+            var marker_bc484e09fc7046798fe86f79530132ea = L.marker(
+                [46.047893, 11.137539],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_2f92b2d86dac40709a4f75f67eed6ff5 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_bc484e09fc7046798fe86f79530132ea.setIcon(icon_2f92b2d86dac40709a4f75f67eed6ff5);
+        
+    
+        var popup_c0674541a2844da6b669c1349d76a88e = L.popup({"maxWidth": 200});
+
+        
+            var html_ff1c1754f8bc4b53881e4841eddc16da = $(`<div id="html_ff1c1754f8bc4b53881e4841eddc16da" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Cernidor</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>3 min 51 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>231m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_c0674541a2844da6b669c1349d76a88e.setContent(html_ff1c1754f8bc4b53881e4841eddc16da);
+        
+
+        marker_bc484e09fc7046798fe86f79530132ea.bindPopup(popup_c0674541a2844da6b669c1349d76a88e)
+        ;
+
+        
+    
+    
+            var marker_0304f5ee0deb4f44ba12c578ea25af72 = L.marker(
+                [46.045073, 11.139111],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_88eb87073baa48b9ba5a2099a66938fc = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_0304f5ee0deb4f44ba12c578ea25af72.setIcon(icon_88eb87073baa48b9ba5a2099a66938fc);
+        
+    
+        var popup_366a946ab86d41afb23d6dc29d03a9d4 = L.popup({"maxWidth": 200});
+
+        
+            var html_7780cfbb11314ec09a7468fcf7691d5c = $(`<div id="html_7780cfbb11314ec09a7468fcf7691d5c" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano-Staz. Fs</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>10 min 39 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>639m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_366a946ab86d41afb23d6dc29d03a9d4.setContent(html_7780cfbb11314ec09a7468fcf7691d5c);
+        
+
+        marker_0304f5ee0deb4f44ba12c578ea25af72.bindPopup(popup_366a946ab86d41afb23d6dc29d03a9d4)
+        ;
+
+        
+    
+    
+            var marker_2ca94e809619462f9c563cd70ef15fc0 = L.marker(
+                [46.04746, 11.135144],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_dd62e00471f6456d9cfbc3619a7542d8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_2ca94e809619462f9c563cd70ef15fc0.setIcon(icon_dd62e00471f6456d9cfbc3619a7542d8);
+        
+    
+        var popup_052a442f788b40fc9622e816dc49a8b6 = L.popup({"maxWidth": 200});
+
+        
+            var html_aa458a53279849968be700fb96201d98 = $(`<div id="html_aa458a53279849968be700fb96201d98" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">S.Bartolameo-Staz. Fs</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>18 min 48 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1128m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_052a442f788b40fc9622e816dc49a8b6.setContent(html_aa458a53279849968be700fb96201d98);
+        
+
+        marker_2ca94e809619462f9c563cd70ef15fc0.bindPopup(popup_052a442f788b40fc9622e816dc49a8b6)
+        ;
+
+        
+    
+    
+            var marker_a51e048eec48434489515240f2aa4a49 = L.marker(
+                [46.044756, 11.139687],
+                {}
+            ).addTo(feature_group_42f80cb70102493e8e342bdb1328029e);
+        
+    
+            var icon_01e5bc85f0544accabc2a8f6b10ceed9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bus", "iconColor": "white", "markerColor": "lightblue", "prefix": "fa"}
+            );
+            marker_a51e048eec48434489515240f2aa4a49.setIcon(icon_01e5bc85f0544accabc2a8f6b10ceed9);
+        
+    
+        var popup_df1d1094b14241b3890a96a1f72028d7 = L.popup({"maxWidth": 200});
+
+        
+            var html_e9d7f117a338445783207054d1df4919 = $(`<div id="html_e9d7f117a338445783207054d1df4919" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Villazzano Fs-P/Golfi Urbani</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Fermata del bus</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Trasporti</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>8 min 59 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>539m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_df1d1094b14241b3890a96a1f72028d7.setContent(html_e9d7f117a338445783207054d1df4919);
+        
+
+        marker_a51e048eec48434489515240f2aa4a49.bindPopup(popup_df1d1094b14241b3890a96a1f72028d7)
+        ;
+
+        
+    
+    
+            var feature_group_ddc0673e1472468e9527bae3e7ec1e29 = L.featureGroup(
+                {}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var marker_c3121578b81746b0b3084488a14f046d = L.marker(
+                [46.0457878112793, 11.133090019226074],
+                {}
+            ).addTo(feature_group_ddc0673e1472468e9527bae3e7ec1e29);
+        
+    
+            var icon_e73416f4041f47cbbe18694a3e30d1dc = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "university", "iconColor": "white", "markerColor": "pink", "prefix": "fa"}
+            );
+            marker_c3121578b81746b0b3084488a14f046d.setIcon(icon_e73416f4041f47cbbe18694a3e30d1dc);
+        
+    
+        var popup_2ed0c4a25df849359940b78538822708 = L.popup({"maxWidth": 200});
+
+        
+            var html_104213e3128b44838cc4786834c84b69 = $(`<div id="html_104213e3128b44838cc4786834c84b69" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Teatro Sanbàpolis</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Teatro</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Cultura</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>21 min 2 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1262m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_2ed0c4a25df849359940b78538822708.setContent(html_104213e3128b44838cc4786834c84b69);
+        
+
+        marker_c3121578b81746b0b3084488a14f046d.bindPopup(popup_2ed0c4a25df849359940b78538822708)
+        ;
+
+        
+    
+    
+            var feature_group_4df5f981a39d46fa968ed52591c83c5c = L.featureGroup(
+                {}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var marker_237a5722d5fc40729e2cb12a3f6c9704 = L.marker(
+                [46.04804992675781, 11.13746452331543],
+                {}
+            ).addTo(feature_group_4df5f981a39d46fa968ed52591c83c5c);
+        
+    
+            var icon_e8761aad673045c0aff4e5a7a475d1f3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "wrench", "iconColor": "white", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_237a5722d5fc40729e2cb12a3f6c9704.setIcon(icon_e8761aad673045c0aff4e5a7a475d1f3);
+        
+    
+        var popup_b0add3c6efc94cfeb4e1842e32027a8c = L.popup({"maxWidth": 200});
+
+        
+            var html_ca3f59511176465eaacabf0777027397 = $(`<div id="html_ca3f59511176465eaacabf0777027397" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Acqua potabile</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Acqua potabile</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Utilità</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>4 min 6 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>246m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_b0add3c6efc94cfeb4e1842e32027a8c.setContent(html_ca3f59511176465eaacabf0777027397);
+        
+
+        marker_237a5722d5fc40729e2cb12a3f6c9704.bindPopup(popup_b0add3c6efc94cfeb4e1842e32027a8c)
+        ;
+
+        
+    
+    
+            var feature_group_4f8d434bda7b423aa6c9686f3c2e6c5b = L.featureGroup(
+                {}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var marker_f3fbe96771064abaa692c9616f4b7eaa = L.marker(
+                [46.04761505126953, 11.131760597229004],
+                {}
+            ).addTo(feature_group_4f8d434bda7b423aa6c9686f3c2e6c5b);
+        
+    
+            var icon_e987726ce1184eac835a8a926e82553d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_f3fbe96771064abaa692c9616f4b7eaa.setIcon(icon_e987726ce1184eac835a8a926e82553d);
+        
+    
+        var popup_35c2c784c00c478a91af96949375fe22 = L.popup({"maxWidth": 200});
+
+        
+            var html_7f835cb9ba0f481ebc1fa6bbcb8fa823 = $(`<div id="html_7f835cb9ba0f481ebc1fa6bbcb8fa823" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Tavolo per picnic</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Tavolo per picnic</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Aree verdi</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>23 min 32 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1412m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_35c2c784c00c478a91af96949375fe22.setContent(html_7f835cb9ba0f481ebc1fa6bbcb8fa823);
+        
+
+        marker_f3fbe96771064abaa692c9616f4b7eaa.bindPopup(popup_35c2c784c00c478a91af96949375fe22)
+        ;
+
+        
+    
+    
+            var marker_6c175df29c254ac480207158dbf41463 = L.marker(
+                [46.0473351, 11.133493670118153],
+                {}
+            ).addTo(feature_group_4f8d434bda7b423aa6c9686f3c2e6c5b);
+        
+    
+            var icon_d3954d0be50a42448cc56d1840f576e3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "tree", "iconColor": "white", "markerColor": "green", "prefix": "fa"}
+            );
+            marker_6c175df29c254ac480207158dbf41463.setIcon(icon_d3954d0be50a42448cc56d1840f576e3);
+        
+    
+        var popup_f1c8ef714fa84b56a02e0b6a99944539 = L.popup({"maxWidth": 200});
+
+        
+            var html_18c3333b1c0d4570b97d2e871255ea44 = $(`<div id="html_18c3333b1c0d4570b97d2e871255ea44" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Parco</h4>             <table style="width: 160px; font-family: 'Roboto', sans-serif;">             <tbody>                              <tr>                         <td><b>Luogo</b></td>                         <td>Parco</td>                     </tr>                                      <tr>                         <td><b>Categoria</b></td>                         <td>Aree verdi</td>                     </tr>                                      <tr>                         <td><b>Distanza (min)</b></td>                         <td>17 min 24 sec</td>                     </tr>                                      <tr>                         <td><b>Distanza (metri)</b></td>                         <td>1044m</td>                     </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_f1c8ef714fa84b56a02e0b6a99944539.setContent(html_18c3333b1c0d4570b97d2e871255ea44);
+        
+
+        marker_6c175df29c254ac480207158dbf41463.bindPopup(popup_f1c8ef714fa84b56a02e0b6a99944539)
+        ;
+
+        
+    
+    
+            var marker_7a5523c93f6144498238bfee6d6db6e0 = L.marker(
+                [46.04677001761587, 11.137760035292132],
+                {"name": "Settore Industria E Artigianato Serale"}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var icon_476ab0ccf128402693e66ca89ab1e64f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "graduation-cap", "iconColor": "white", "markerColor": "red", "prefix": "fa"}
+            );
+            marker_7a5523c93f6144498238bfee6d6db6e0.setIcon(icon_476ab0ccf128402693e66ca89ab1e64f);
+        
+    
+        var popup_6e6a344c219b4524816c822ee4531db3 = L.popup({"maxWidth": 300});
+
+        
+            var html_54d7351455e14348819fc589fd391949 = $(`<div id="html_54d7351455e14348819fc589fd391949" style="width: 100.0%; height: 100.0%;">         <!DOCTYPE html>         <html>             <style>                 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;1,300;1,400;1,700&display=swap');             </style>             <h4 style="font-family: 'Roboto', sans-serif;">Settore Industria E Artigianato Serale</h4>             <table style="height: 150px; width: 280px; font-family: 'Roboto', sans-serif; padding:5px; word-wrap: break-all;">             <tbody>                              <tr>                         <td><b>Istituto</b></td>                         <td>Istituto Formazione Professionale Servizi Alla Persona E Legno "S. Pertini" - Trento</td>                     </tr>                                      <tr>                         <td><b>Tipo Istituto</b></td>                         <td>Formazione professionale</td>                     </tr>                                      <tr>                         <td><b>Gestione</b></td>                         <td>Statale</td>                     </tr>                                      <tr>                         <td><b>Indirizzo</b></td>                         <td>Via Asiago, 14</td>                     </tr>                                      <tr>                         <td><b>Comune</b></td>                         <td>Trento</td>                     </tr>                                      <tr>                         <td><b>CAP</b></td>                         <td>38123</td>                     </tr>                                  <tr>                     <td><b>Telefono</b></td>                     <td><a href = "tel:0461/933147" target="_blank">0461/933147</a></td>                 </tr>                                  <tr>                     <td><b>Fax</b></td>                     <td><a href = "tel:0461/931682" target="_blank">0461/931682</a></td>                 </tr>                                  <tr>                     <td><b>Email istituto</b></td>                     <td><a href = "mailto:ifp.trento@pec.provincia.tn.it" target="_blank">ifp.trento@pec.provincia.tn.it</a></td>                 </tr>                                  <tr>                     <td><b>Email segreteria</b></td>                     <td><a href = "mailto:ifp.trento@scuole.provincia.tn.it" target="_blank">ifp.trento@scuole.provincia.tn.it</a></td>                 </tr>                                  <tr>                     <td><b>Sito web</b></td>                     <td style="word-break: break-all; padding: 0 10px 0 0;"><a href = "https://https://ifpsandropertinitrento.it" target="_blank">https://ifpsandropertinitrento.it</a></td>                 </tr>                              </tbody>             </table>         </html>         </div>`)[0];
+            popup_6e6a344c219b4524816c822ee4531db3.setContent(html_54d7351455e14348819fc589fd391949);
+        
+
+        marker_7a5523c93f6144498238bfee6d6db6e0.bindPopup(popup_6e6a344c219b4524816c822ee4531db3)
+        ;
+
+        
+    
+    
+            marker_7a5523c93f6144498238bfee6d6db6e0.bindTooltip(
+                `<div>
+                     Settore Industria E Artigianato Serale
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var feature_group_56c59e3a12e640609ddce1a4d65d987b = L.featureGroup(
+                {}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+        function geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#fecc5cFF", "fillColor": "#fecc5cFF"};
+            }
+        }
+
+        function geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89 = L.geoJson(null, {
+                onEachFeature: geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89_onEachFeature,
+            
+                style: geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89_styler,
+        });
+
+        function geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89_add (data) {
+            geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89
+                .addData(data)
+                .addTo(feature_group_56c59e3a12e640609ddce1a4d65d987b);
+        }
+            geo_json_f1b3f5c4c76d44a4b7a0be7cf6d07b89_add({"features": [{"geometry": {"coordinates": [[[11.144218209544205, 46.046648987758964], [11.144170049985453, 46.046208790323966], [11.144060160535972, 46.04577399942002], [11.143889600870777, 46.04534880212241], [11.143660014820183, 46.04493729302659], [11.143373614490901, 46.044543434826], [11.143033158921236, 46.04417102016319], [11.142641927477523, 46.043823635121036], [11.142203688249277, 46.04350462470496], [11.141722661748256, 46.04321706064802], [11.141203480261579, 46.04296371184814], [11.140651143250285, 46.04274701772133], [11.140070969222577, 46.04256906472686], [11.139468544544398, 46.042431566289835], [11.138849669679116, 46.04233584631376], [11.138220303372623, 46.04228282644146], [11.137586505319463, 46.04227301718651], [11.136954377860285, 46.0423065130205], [11.136330007269832, 46.04238299146306], [11.135719405198824, 46.042501716183565], [11.13512845083146, 46.0426615440848], [11.134562834313583, 46.0428609363006], [11.134028001994496, 46.04309797300194], [11.13352910400818, 46.043370371869635], [11.133070944697508, 46.043675510056005], [11.132657936358006, 46.044010449425116], [11.132294056746167, 46.04437196482897], [11.131982810761485, 46.04475657514815], [11.131727196671651, 46.04516057679881], [11.131529677206904, 46.04558007938392], [11.131392155803159, 46.046011043146095], [11.131315958224189, 46.04644931786184], [11.131301819741642, 46.046890682802974], [11.131349877998355, 46.04733088738097], [11.131459671625851, 46.04776569208237], [11.131630144631504, 46.048190909301695], [11.131859656515271, 46.0486024436779], [11.132145998020635, 46.04899633154603], [11.13248641236986, 46.049368779123434], [11.13287762178069, 46.049716199062345], [11.13331585901032, 46.050035245016275], [11.133796903623795, 46.05032284388648], [11.134316122637951, 46.050576225437155], [11.134868515149588, 46.050792948993724], [11.135448760517653, 46.05097092696593], [11.136051269634635, 46.05110844496879], [11.136670238792227, 46.05120417834689], [11.137299705620942, 46.05125720494241], [11.137933606563216, 46.05126701398335], [11.138565835324439, 46.05123351100637], [11.139190301736877, 46.05115701876636], [11.13980099046743, 46.05103827412413], [11.14039201900162, 46.0508784209425], [11.140957694343415, 46.050678999059166], [11.14149256788294, 46.050441929443224], [11.14199148790214, 46.05016949567877], [11.142449649211423, 46.04986432195456], [11.142862639438464, 46.04952934777218], [11.143226481522825, 46.04916779961752], [11.143537672007163, 46.0487831598686], [11.14379321475664, 46.048379133240196], [11.143990649782587, 46.04795961108926], [11.144128076894022, 46.04752863392504], [11.144204173950772, 46.0470903524861], [11.144218209544205, 46.046648987758964]]], "type": "Polygon"}, "id": "0", "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            var tile_layer_c31a099135ff4fbe95efcc63ad112605 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var tile_layer_da1833375a0c4feb85ba0f70118f04aa = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var tile_layer_fc41c0bdf8db4239bdc3fb0099073977 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+        
+    
+            var layer_control_d23ad0d176b54c37b5cf0247e5c8a110 = {
+                base_layers : {
+                    "Light" : tile_layer_c31a099135ff4fbe95efcc63ad112605,
+                    "Dark" : tile_layer_da1833375a0c4feb85ba0f70118f04aa,
+                    "OpenStreetMap" : tile_layer_fc41c0bdf8db4239bdc3fb0099073977,
+                },
+                overlays :  {
+                    "Ristorazione" : feature_group_5e3005950cf7464d8889eed1707fdb4c,
+                    "Sport" : feature_group_513d719e3d8c47b5bd307a1ed361fc0d,
+                    "Trasporti" : feature_group_42f80cb70102493e8e342bdb1328029e,
+                    "Cultura" : feature_group_ddc0673e1472468e9527bae3e7ec1e29,
+                    "Utilit\u00e0" : feature_group_4df5f981a39d46fa968ed52591c83c5c,
+                    "Aree verdi" : feature_group_4f8d434bda7b423aa6c9686f3c2e6c5b,
+                    "Dintorni" : feature_group_56c59e3a12e640609ddce1a4d65d987b,
+                },
+            };
+            L.control.layers(
+                layer_control_d23ad0d176b54c37b5cf0247e5c8a110.base_layers,
+                layer_control_d23ad0d176b54c37b5cf0247e5c8a110.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_db9c5efc757b449680ed882855b6b8d6);
+            tile_layer_da1833375a0c4feb85ba0f70118f04aa.remove();
+            tile_layer_fc41c0bdf8db4239bdc3fb0099073977.remove();
+        
+</script>
