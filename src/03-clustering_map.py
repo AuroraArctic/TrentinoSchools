@@ -11,7 +11,7 @@ schools[['Istituto', 'Nome', 'Comune']] = schools[[
 # %%
 
 
-def generate_popup(row, columns):
+def generate_popup(row):
     # Open the HTML popup table
     text = """
         <!DOCTYPE html>
@@ -120,7 +120,7 @@ folium.LayerControl().add_to(map)
 
 # Adding points to clusters
 for p in schools.iterrows():
-    text = generate_popup(p[1], schools.columns)
+    text = generate_popup(p[1])
     iframe = branca.element.IFrame(html=text, width=400, height=280)
     popup = folium.Popup(folium.Html(text, script=True), max_width=400)
     folium.Marker([p[1]['geometry'].y, p[1]['geometry'].x],
