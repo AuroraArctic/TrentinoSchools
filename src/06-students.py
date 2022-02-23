@@ -8,6 +8,42 @@ import geopandas as gpd
 import folium
 import pandas as pd
 
+#%%
+# ISTAT Trentino Population, filtering total data
+# about the Region and the province
+df = pd.read_csv("../data/population/ISTAT_Trentino_population.csv", dtype="str")
+df = df[(df['ITTER107'] != "ITD20") & (df['ITTER107'] != "ITD2") & (df['ETA1'] != "TOTAL") & (df['Stato civile'] == "totale")]
+
+# %%
+# Removing unnecessary columns
+df.drop(['Flag Codes', 'Flags',
+              'Seleziona periodo', "TIPO_DATO15", 'STATCIV2','Stato civile',
+              "Tipo di indicatore demografico", 'TIME', 'SEXISTAT1', 'ETA1'], axis=1, inplace=True)
+
+# %%
+# Renaming columns
+df.rename(columns = {
+    'ITTER107': 'Id',
+    'Territorio': 'Comune',
+    'Età':'Anni',
+    'Value':'Popolazione'
+}, inplace=True)
+
+# Converting years and population to int
+df['Anni'] = [int(x.split(" ")[0]) for x in df['Anni']]
+df['Popolazione'] = df['Popolazione'].astype("int32")
+
+# Converting Municipality to Title
+df['Comune'] = [x.title() for x in df['Comune']]
+#%%
+# Saving the dataframe as csv
+df.to_csv("../data/population/trentino_pop_per_age.csv", index=False)
+
+# Pick total population per each municipality
+df = df.groupby(['Id','Comune','Sesso'], as_index = False).sum()[['Id','Comune','Sesso', 'Popolazione']]
+# Saving dataframe as csv
+df.to_csv("../data/population/trentino_total_pop.csv", index=False)
+
 # %%
 # Reading school files
 schools = gpd.read_file(
@@ -33,9 +69,13 @@ schools.drop(['index', 'Id Istituto', 'Telefono', 'Fax', 'Email istituto',
              'Email segreteria', 'Sito web'], axis=1, inplace=True)
 
 # %%
+# TASK: GET NUMBER OF STUDENTS FOR EACH SCHOOL
+# First option: Scraping from Aprilascuola Project
 students = schools[['Nome', 'lat', 'lon', 'Tipo Istituto',
                     'Gestione', 'Comune', 'geometry', 'Id']]
-# Scraping data about students and classes
+
+# Scraping data about students and classes based on the provincial ID
+# Removing those schools with no ID
 students = students[~students['Id'].isna()]
 
 #%%
@@ -63,11 +103,12 @@ students.to_pickle("../data/Trentino/schools/students.pkl")
 
 #%% 
 # Now instead of scraping data from aprilascuola, use the official numbers provided
-# by the province of Trento (more reliable according to the director of Education)
+# by the province of Trento (more reliable according to the department of Education and Culture of Trentino)
 
-# %%
 # Reading aprilascuola data file with students and classes in December 2021
 df = pd.read_csv("../data/population/students_per_school.csv", sep=";", dtype=object)
+
+# Renaming columns
 df.rename(columns={
     'Istituzione Scolastica': 'Istituto',
     'Ordine Scolastico': 'Tipo Istituto',
@@ -76,6 +117,8 @@ df.rename(columns={
     'Numero Iscritti': 'Studenti',
     'Numero Classi': 'Classi'
 }, inplace=True)
+
+# Applying some transformations
 df['Studenti'] = df['Studenti'].astype("int32")
 df['Classi'] = df['Classi'].astype("int32")
 df[['Istituto', 'Tipo Istituto', 'Nome']] = df[['Istituto',
@@ -85,16 +128,18 @@ df[['Istituto', 'Tipo Istituto', 'Nome']] = df[['Istituto',
 df.drop_duplicates(inplace=True)
 
 #%%
+# Merging schools data with students data
 students = pd.merge(schools, df, on=["Id",'Nome','Istituto'])
 students.drop(['Tipo Istituto_x'],axis=1, inplace=True)
 students.rename(columns = {'Tipo Istituto_y': 'Tipo Istituto'}, inplace=True)
 #%%
+# Group by Municipality to get the total number of students and classes
 stud_agg = students.groupby(['Comune'], as_index=False).sum()[
     ['Comune', 'Studenti', 'Classi']]
 stud_agg
 stud_schools = students.groupby(['Comune']).size().to_frame('Schools')
-# %%
 stud_agg = stud_agg.set_index('Comune')
+
 # Geodata with information to make popup in the map
 import numpy as np
 geo_data = geojson.load(open("../data/trentino.geojson", encoding="utf-8"))
@@ -122,37 +167,41 @@ for s in geo_data['features']:
 stud_agg = stud_agg.reset_index()
 
 #%%
+# Creating an aggregated dataframe to use in further analysis
 from geojson import FeatureCollection
 resume_schools_municipalities = gpd.GeoDataFrame.from_features(FeatureCollection(geo_data))
 resume_schools_municipalities.rename(columns = {'population':'Popolazione'}, inplace=True)
 resume_schools_municipalities = resume_schools_municipalities.set_crs("EPSG:4326")
-resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality.geojson")
-resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality", driver="ESRI Shapefile")
-
-
-resume_schools_municipalities['Studenti'] = resume_schools_municipalities['Studenti'].astype("Int64")
-resume_schools_municipalities['Classi'] = resume_schools_municipalities['Classi'].astype("Int64")
-resume_schools_municipalities['density'] = resume_schools_municipalities['density'].astype("Float64")
-resume_schools_municipalities['Media studenti per classe'] = resume_schools_municipalities['Media studenti per classe'].astype("Float64")
-resume_schools_municipalities['Media studenti per scuola'] = resume_schools_municipalities['Media studenti per scuola'].astype("Float64")
+# resume_schools_municipalities['Studenti'] = resume_schools_municipalities['Studenti'].astype("Int64")
+# resume_schools_municipalities['Classi'] = resume_schools_municipalities['Classi'].astype("Int64")
+# resume_schools_municipalities['density'] = resume_schools_municipalities['density'].astype("Float64")
+# resume_schools_municipalities['Media studenti per classe'] = resume_schools_municipalities['Media studenti per classe'].astype("Float64")
+# resume_schools_municipalities['Media studenti per scuola'] = resume_schools_municipalities['Media studenti per scuola'].astype("Float64")
 
 resume_schools_municipalities.drop(resume_schools_municipalities[resume_schools_municipalities['Studenti'].isna()].index, inplace=True)
 #%%
+# Loading data about Trentino Population per age
 pop_age = pd.read_csv("../data/population/trentino_pop_per_age.csv", dtype="str")
 
 pop_age['Anni'] = pop_age['Anni'].astype("int32")
 pop_age['Popolazione'] = pop_age['Popolazione'].astype("int32")
 
+# Grouping by municipality and keeping only data of people below 22 years
 pop_age_tot = pop_age[(pop_age['Sesso']=="totale") & (pop_age['Anni']<22)].groupby(['Id','Comune'], as_index=False).sum()[['Id','Comune','Popolazione']]
 
 pop_age_tot.rename(columns = {'Popolazione':'Pop under 20'}, inplace=True)
+
+# Rename it to make it match with ISTAT geojson
 pop_age_tot.replace("San Giovanni Di Fassa-Sèn Jan", "San Giovanni Di Fassa", inplace=True)
 
 #%%
-resume_schools_municipalities = pd.merge(resume_schools_municipalities, pop_age_tot, on='Comune', how='left')
+# Merge data about municipalities with population one
+resume_schools_municipalities = pd.merge(resume_schools_municipalities, pop_age_tot, on='Comune', how='outer')
 resume_schools_municipalities['stud_density'] = resume_schools_municipalities['Studenti']/resume_schools_municipalities['Pop under 20']
 
 resume_schools_municipalities = resume_schools_municipalities.set_index('Comune')
+#%%
+# Adding more properties to the geodata for tooltip information
 for s in geo_data['features']:
     comune = s['properties']['Comune']
     if comune not in list(resume_schools_municipalities.index):
@@ -162,6 +211,12 @@ for s in geo_data['features']:
         s['properties']['Pop under 20'] = int(resume_schools_municipalities.loc[comune,'Pop under 20'])
         s['properties']['stud_density'] = float(round(resume_schools_municipalities.loc[comune,'stud_density'],2))
 resume_schools_municipalities = resume_schools_municipalities.reset_index()
+
+#%%
+gpd.GeoDataFrame(resume_schools_municipalities).to_file("../data/aggregated_data_per_municipality.geojson")
+# Saving aggregated data
+resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality.geojson")
+resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality", driver="ESRI Shapefile")
 
 #%%
 # MAP

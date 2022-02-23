@@ -27,7 +27,6 @@ colors.reverse()
 
 # %%
 
-
 def get_graph(place, net_type):
     # Get the graph with the specified network type around a place
     G = ox.graph_from_point((place.y, place.x), network_type=net_type)
@@ -43,7 +42,6 @@ def get_center_node(G, place):
 
 # %%
 # ROUTE ISOCHRONES
-
 
 def get_folium_route_time_distance_map(G, place, trip_times, colors, index):
     # Creating the map
@@ -69,12 +67,6 @@ def get_folium_route_time_distance_map(G, place, trip_times, colors, index):
                   tooltip=schools.loc[index, 'Nome']).add_to(map)
     # Adjusting map boundaries
     map.fit_bounds(map.get_bounds())
-
-    # # Adding layers for styling
-    # folium.TileLayer("cartodbpositron", name="Light").add_to(map)
-    # folium.TileLayer("Cartodb dark_matter", name="Dark").add_to(map)
-    # folium.TileLayer('openstreetmap', name="OpenStreetMap").add_to(map)
-    # folium.LayerControl().add_to(map)
     return map
 
 # %%
@@ -82,7 +74,6 @@ def get_folium_route_time_distance_map(G, place, trip_times, colors, index):
 
 
 def style(feature):
-    print(feature)
     return {
         'fillColor': feature['properties']['color'],
         'color': feature['properties']['color'],
@@ -106,14 +97,9 @@ def get_folium_isochrone_map(G, place, trip_times, colors):
 
     isochrone_polys = gpd.GeoDataFrame(
         geometry=isochrone_polys, crs="EPSG:4326")
-    print(isochrone_polys)
     map = folium.Map(location=(place.y, place.x),
-                     zoom_start=13,
+                     zoom_start=14,
                      tiles="cartodbpositron", overlay=False)
-
-    folium.TileLayer("cartodbpositron", name="Light").add_to(map)
-    folium.TileLayer("Cartodb dark_matter", name="Dark").add_to(map)
-    folium.TileLayer('openstreetmap', name="OpenStreetMap").add_to(map)
     for x in range(len(isochrone_polys)-1):
         isochrone_polys.loc[x, 'geometry'] = isochrone_polys.loc[x, 'geometry'].difference(
             isochrone_polys.loc[x+1, 'geometry'])
@@ -121,7 +107,6 @@ def get_folium_isochrone_map(G, place, trip_times, colors):
     for x in range(len(isochrone_polys)):
         folium.GeoJson(isochrone_polys.iloc[[x]],
                        style_function=style).add_to(map)
-    folium.LayerControl().add_to(map)
     return map
 
 # %%
@@ -132,16 +117,13 @@ get_folium_route_time_distance_map(get_graph(schools.loc[2, 'geometry'], "walk")
                                    colors, 
                                    2)
 #%%
-get_folium_route_time_distance_map(get_graph(schools.loc[0, 'geometry'], "walk"),
+get_folium_isochrone_map(get_graph(schools.loc[0, 'geometry'], "walk"),
                                    schools.loc[0, 'geometry'],
                                    trip_times, 
-                                   colors, 
-                                   0)
+                                   colors)
 # %%
 
 # Iterates over the schools and generates 3 isochrones: walk, bike and drive
-
-
 def generate_route_isochrones(df):
     for index in list(df.index):
 
@@ -149,7 +131,8 @@ def generate_route_isochrones(df):
         place = schools.loc[index, 'geometry']
         Gs = [get_graph(place, x) for x in network_type]
 
-        for i in range(len(network_type)):
+        import tqdm
+        for i in tqdm(range(len(network_type))):
             try:
                 get_folium_route_time_distance_map(Gs[i], place, trip_times, colors, index).save("../viz/isochrones/route/" +
                                                                                                  network_type[i]+"/"+str(
@@ -157,7 +140,7 @@ def generate_route_isochrones(df):
             except ValueError:
                 print(index)
                 continue
-
+#%%
 generate_route_isochrones(schools)
 
 

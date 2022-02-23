@@ -43,9 +43,6 @@ for(i in 19:50){
 }
 
 
-# Get students data
-stud_schools = read.csv("../data/schools/students.csv")
-
 #####################################
 # Critical cut-off neighbourhood
 coords = coordinates(tn)
