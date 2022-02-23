@@ -83,7 +83,7 @@ trentino = trentino.dissolve(by="COD_PROV")
 map = folium.Map(location=[46.0904, 11.14], zoom_start=9, tiles=None)
 
 # Adding layers
-folium.TileLayer("cartodbpositron", name="Light").add_to(map)
+folium.TileLayer("cartodbpositron", name="Light", show=True).add_to(map)
 folium.TileLayer("Cartodb dark_matter", name="Dark").add_to(map)
 folium.TileLayer('openstreetmap', name="OpenStreetMap").add_to(map)
 
@@ -96,7 +96,7 @@ map.add_child(tn)
 
 
 # Adding cluster of points
-fg = folium.FeatureGroup(name='Schools', show=True)
+fg = folium.FeatureGroup(name='Scuole', show=True)
 cluster = MarkerCluster(icon_create_function="""
     function (cluster) {    
         var childCount = cluster.getChildCount();  
@@ -137,10 +137,11 @@ servicesearch = Search(
     layer=cluster,
     search_label='name',
     search_zoom=18,
-    placeholder='Search for a school',
+    placeholder='Cerca una scuola...',
     collapsed=True).add_to(map)
 
 map.save('../viz/schools_cluster.html')
 
 # %%
 map
+# %%

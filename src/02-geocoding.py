@@ -82,10 +82,9 @@ geocode_df = df[df['lat'].isna()]
 
 # %%
 # Manually inserting coordinates
-geocode_df[['lat','lon']] = [[46.43984, 11.69178],
+geocode_df[['lat','lon']] = [[46.43982, 11.69179],
                              [45.91263, 10.61412],
                              [46.0354, 10.87076],
-                             [46.32137, 11.06612],
                              [46.22257, 10.82716],
                              [45.81072, 11.01411],
                              [46.02616, 10.83888],
@@ -105,4 +104,4 @@ df.to_crs(4326).to_file("../data/trentino/schools/schools.geojson", index=False)
 
 # Saving schools as shapefile
 df = gpd.read_file("../data/trentino/schools/schools.geojson")
-df.to_file("../data/Trentino/schools/schools.shp", driver='ESRI Shapefile')
+df.to_file("../data/Trentino/schools", driver='ESRI Shapefile')

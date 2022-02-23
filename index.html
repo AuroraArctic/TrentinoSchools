@@ -5,16 +5,26 @@
     <title>Schools in Trentino</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="style.css">
+
+
+    <!-- Font  -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Particles -->
     <link rel="stylesheet" href="particles.css">
     <link rel="javascript" href="particles.js">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/aef6d5743a.js" crossorigin="anonymous"></script>
+
+    <!-- Additional Libraries -->
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -22,76 +32,58 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
-        integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
-        integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
-    <script src="https://kit.fontawesome.com/aef6d5743a.js" crossorigin="anonymous"></script>
+
+    <!-- Select with research -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
 </head>
 
 <body>
     <script>
 
-        function choose_school() {
-            // Update the path for the route isochrone
-            update_route_isochrone()
-            // Update the path for the POIs around the school
-            update_pois_path()
-        }
-
-        function update_route_isochrone() {
-            school = $("#choose-school :selected").val();
+        function update_pois_path() {
+            school = $("#poi-select").val();
             $("#pois").attr("src", "viz/pois/" + school + ".html");
-        }
 
+        }
         function update_route_isochrone() {
             transport = $("input[name='choose-transport']:checked").val();
-            school = $("#choose-school :selected").val();
+            console.log(transport);
+            school = $("#school-select").val();
             $("#route-isochrone").attr("src", "viz/isochrones/route/" + transport + "/" + school + ".html");
         }
 
-        $(document).ready(function () {
-            $('#choose-school').selectize({
-                sortField: 'text'
-            });
-        });
+        function change_knn() {
+            k = $("#choose-knn").val();
+            $("#knn").attr("src", "viz/knn/" + k + ".png");
+        }
     </script>
 
     <!-- Navbar -->
-    <div class="w3-top">
-        <div class="w3-bar main-color w3-card w3-left-align w3-large">
-            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-cornflowerblue"
-                title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-            <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-            <a href="#searchschool" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Cerca
-                Scuola</a>
-            <a href="#density" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">School
-                density</a>
-            <a href="#stats" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Some
-                statistics</a>
-            <a href="#openstreetmap" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Places
-                nearby</a>
-            <a href="#networking" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">School
-                Networking</a>
-        </div>
-
-        <!-- Navbar on small screens -->
-        <div id="navDemo" class="bar-block white hide hide-large hide-medium large">
-            <a href="#searchschool" class="w3-bar-item w3-button w3-padding-large">Cerca Scuola</a>
-            <a href="#density" class="w3-bar-item w3-button w3-padding-large">Studenti</a>
-            <a href="#stats" class="w3-bar-item w3-button w3-padding-large">Statistiche</a>
-            <a href="#openstreetmap" class="w3-bar-item w3-button w3-padding-large">Nei dintorni</a>
-            <a href="#networking" class="w3-bar-item w3-button w3-padding-large">Trasporti</a>
-        </div>
+    <div class="w3-top" id="navbar">
+        <a href="#" >Home</a>
+        <a href="#searchschool">Cerca
+            Scuola</a>
+        <a href="#density">School
+            density</a>
+        <a href="#stats">Some
+            statistics</a>
+        <a href="#openstreetmap">Places
+            nearby</a>
+        <a href="#networking">School
+            Networking</a>
+        <a href="javascript:void(0);" class="icon" onclick="resize_navbar()">
+            <i class="fa fa-bars"></i>
+        </a>
     </div>
 
 
     <!-- Header -->
-    <header class="center w3-container w3-white-text" style="padding:128px 16px; position:relative;">
+    <header class="center container w3-white-text" style="padding:128px 16px; position:relative;">
         <div id="particles-js">
-            <h1 class="w3-margin jumbo">Scuole in Trentino</h1>
+            <h1 class="w3-margin-top jumbo" style="padding-top:50px">Scuole in Trentino</h1>
             <h4 class="w3-xlarge">Progetto di Geospatial Analysis</h4>
         </div>
         <script src="particles.min.js"></script>
@@ -104,17 +96,34 @@
             <div class="content">
                 <div class="right">
                     <h1>Cerca la tua scuola</h1>
-                    <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut
-                        enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p class="w3-text-grey">
+                        La mappa di seguito presentata mostra il Trentino corredato da alcuni marker, che rappresentano
+                        la singola scuola. Se il livello di zoom non è dettagliato, le scuole vengono raggruppate: tante
+                        più scuole sono raggruppate, tanto più scuro è il cerchio, contenente il numero di scuole che
+                        contiene. Aumentando il livello di zoom, è possibile visualizzare il numero di scuole in un'area
+                        specifica.
+                        <br>
+                        Cliccando sul marker della singola scuola, è possibile visualizzarne i dettagli, come nome,
+                        Istituto, informazioni di contatto e indirizzo. Nel caso si volesse cercare una scuola
+                        specifica, è disponibile l'opzione di ricerca in base al nome della scuola (singola unità
+                        didattica).
+                        <br>
+                        Infine, l'utente può selezionare lo stile che più preferisce dal controller in alto a destra
+                        sulla mappa, rendendo la mappa chiara, scura, con dettagli sugli edifici e rimuovendo punti e
+                        confini inseriti.
+                    </p>
                 </div>
                 <iframe src="viz/schools_cluster.html"></iframe>
+            </div>
+            <div class="content">
+                <h1>Le scuole trentine in proporzioni</h1>
+                <p style="float:left;">
+                    Il grafico a fianco mostra la proporzione di scuole statali e paritarie nel territorio trentino. In
+                    particolare, cliccando sulla singola categoria, è possibile approfondire la proporzione, per ognuno
+                    dei due tipi di gestione scolastica, dei vari gradi di scuola: scuola dell'infanzia, primaria,
+                    secondaria di primo e di secondo grado, formazione professionale ed educazione per adulti.
+                </p>
+                <iframe class="noshadow" src="viz/sunburst_schools.html" style="float: right;"></iframe>
             </div>
         </div>
 
@@ -147,33 +156,33 @@
         <!-- Third Grid -->
         <div id="stats" class="w3-row-padding white w3-padding-64 w3-container">
             <div class="content">
-                <div class="right">
-                    <h1>Networking</h1>
-                    <select id="choose-school" onchange="choose_school()" value=0
-                        placeholder="Cerca la tua scuola..."""></select>
-                    <!-- <select id="choose-transport" onchange="update_route_isochrone()" value="walk">
-                        <option value="walk" selected>A piedi</option>
-                        <option value="bike">In bici</option>
-                        <option value="drive_service">In auto</option>
-                    </select> -->
-                    <!-- Let's try with icons -->
-                    <form id="choose-transport" onchange="update_route_isochrone()" value="walk">
-                        <label>
-                            <input type="radio" name="test" value="walk" checked>
-                            <i class="fa-solid fa-person-walking"></i>
-                        </label>
-                        <label>
-                            <input type="radio" name="test" value="bike">
-                            <i class="fa fa-bicycle" aria-hidden="true"></i>
-                        </label>
-                        <label>
-                            <input type="radio" name="test" value="drive_service">
-                            <i class="fa fa-car" aria-hidden="true"></i>
-                        </label>
-                    </form>
-
-
-                </div>
+                <h1>Networking</h1>
+                <h4>Quante strade puoi raggiungere?</h4>
+                <p>
+                    Questa sezione è dedicata agli spostamenti a piedi, in bici e in auto. Scegliendo la propria scuola
+                    e il mezzo di trasporto, verrà caricata una mappa che mostra quali strade possano essere raggiunte
+                    in 5, 10, 15 e 20 minuti, la cui differenza in termini di tempo viene espressa dall'intensità del
+                    colore della strada.
+                </p>
+                <select class="choose-school" onchange="update_route_isochrone()" value=0
+                    placeholder="Cerca la tua scuola..." id="school-select"></select>
+                <form id="choose-transport" onchange="update_route_isochrone()" value="walk" style="float:right;">
+                    <label>
+                        <i class="fas fa-walking">
+                            <input type="radio" name="choose-transport" value="walk" checked>
+                        </i>
+                    </label>
+                    <label>
+                        <i class="fas fa-bicycle">
+                            <input type="radio" name="choose-transport" value="bike">
+                        </i>
+                    </label>
+                    <label>
+                        <i class="fas fa-car">
+                            <input type="radio" name="choose-transport" value="drive_service">
+                        </i>
+                    </label>
+                </form>
                 <iframe id="route-isochrone" src="viz/isochrones/route/walk/0.html"></iframe>
             </div>
         </div>
@@ -183,15 +192,16 @@
             <div class="content">
                 <div class="w3-twothird">
                     <h1>Punti di interesse</h1>
+                    <select id="poi-select" class="choose-school" onchange="update_pois_path()" value=0
+                        placeholder="Cerca la tua scuola..."></select>
                     <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                         tempor
                         incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                         ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
                         occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
                         consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut
-                        enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat.</p>
                 </div>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
             </div>
@@ -200,7 +210,7 @@
         <!-- Fifth Grid -->
         <div id="networking" class="w3-row-padding white w3-padding-64 w3-container">
             <div class="content">
-                <div class="w3-twothird">
+                <div>
                     <h1>Modelli di regressione spaziale</h1>
                     <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                         tempor
@@ -213,8 +223,10 @@
                         laboris nisi ut aliquip ex ea commodo consequat.</p>
                 </div>
 
-                <div class="w3-third center">
-                    <i class="fa fa-anchor w3-padding-64 w3-text-red"></i>
+                <div class="left">
+                    <input type="range" min="1" max="20" value="1" class="slider" id="choose-knn"
+                        oninput="change_knn()">
+                    <img src="viz/knn/1.png" id="knn">
                 </div>
             </div>
         </div>
@@ -232,20 +244,35 @@
     </footer>
 
     <script>
-        $.get("data/schools_list_for_select.json",
+
+        // Working to load the list of schools
+        $(document).ready(function () {
+            $('.choose-school').select2()
+        });
+
+        $.get("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/data/schools_list_for_select.json",
             function (data, error) {
                 if (error) {
                     console.log(error);
                 }
-                var options = JSON.parse(JSON.stringify(data));
+                var options = JSON.parse(data);
                 for (i in options) {
                     if (i == 0) {
-                        $("#choose-school").append('<option value="' + i + '" selected>' + options[i] + '</option>');
+                        $(".choose-school").append('<option value="' + i + '" selected>' + options[i] + '</option>');
                     } else {
-                        $("#choose-school").append('<option value="' + i + '">' + options[i] + '</option>');
+                        $(".choose-school").append('<option value="' + i + '">' + options[i] + '</option>');
                     }
                 }
             });
+
+        function resize_navbar() {
+            var x = document.getElementById("navbar");
+            if (x.className === "w3-top") {
+                x.className += " responsive";
+            } else {
+                x.className = "w3-top";
+            }
+        }
     </script>
 </body>
 

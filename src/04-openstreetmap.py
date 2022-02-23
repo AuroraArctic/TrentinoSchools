@@ -83,7 +83,7 @@ def categorize(type):
                   'music_school', 'music_venue', 'public_bookcase']:
         return "Culture"
     elif type in ["typography", 'tipography', 'drinking_water',
-                  'stationery', 'copyshop', 'printing', 'stationery']:
+                  'stationery', 'copyshop', 'printing']:
         return "Utilities"
     elif type in ['outdoor_seating', 'park', 'picnic_site', 'picnic_table']:
         return "Outdoor"
@@ -145,7 +145,7 @@ pois = pd.concat([pois, transports])
 schools = gpd.read_file("../data/Trentino/schools/schools.geojson", crs=4326)
 
 schools['neighbour'] = schools['geometry'].to_crs(
-    32632).buffer(500).to_crs(4326)
+    32632).buffer(1000).to_crs(4326)
 
 # %%
 # Get only POIs within the buffers
@@ -156,10 +156,10 @@ schools_neighbour = gpd.GeoDataFrame(schools['neighbour'],
                                      crs=4326).dissolve(aggfunc=sum)
 
 selection = []
-for i in range(len(pois)):
+from tqdm import tqdm
+for i in tqdm(range(len(pois))):
     if pois.loc[i, 'geometry'].within(schools_neighbour['geometry'][0]):
         selection.append(i)
-        print(i)
 
 selection = list(set(selection))
 pois = pois.iloc[selection].reset_index(drop=True)
@@ -175,75 +175,10 @@ icons = {
     'Outdoor': {'icon': 'tree', 'color': 'green', 'name': 'Aree verdi'}
 }
 
-traduction = {
-    'aquatics_centre': 'Centro acquatico',
-    'arts_centre': 'Centro artistico',
-    'artwork': "Opera d'arte",
-    'bakery': "Panificio",
-    'bar': "Bar",
-    'books': "Libreria",
-    'bus': "Fermata del bus",
-    'cafe': "Bar",
-    'cinema': "Cinema",
-    'clinic': "Clinica",
-    'copyshop': "Copisteria",
-    'dentist': "Dentista",
-    'doctors':"Dottore",
-    'dojo': "Dojo",
-    'drinking_water': "Acqua potabile",
-    'fast_food': "Fast food",
-    'fitness_centre': "Centro sportivo",
-    'fitness_station': "Attrezzatura sportiva all'aperto",
-    'food_court': "Cortile alimentare",
-    'gallery': "Galleria d'arte",
-    'greengrocer': "Fruttivendolo",
-    'horse_riding': "Equitazione",
-    'hospital': "Ospedale",
-    'ice_cream': "Gelateria",
-    'ice_rink': "Pista di pattinaggio",
-    'library': "Biblioteca",
-    'mall': "Centro commerciale",
-    'marketplace': "Mercato",
-    'museum': "Museo",
-    'music_school': "Scuola di musica",
-    'music_venue': "Locale per eventi musicali",
-    'outdoor_seating': "Posto a sedere",
-    'park': "Parco",
-    'pharmacy': "Farmacia",
-    'picnic_site': "Area picnic",
-    'picnic_table': "Tavolo per picnic",
-    'pitch': "Campo da gioco",
-    'printing': "Copisteria",
-    'public_bookcase': "Libreria pubblica",
-    'restaurant': "Ristorante",
-    'restaurant;cafe': "Ristorante/caffè",
-    'schoolyard': "Cortile scolastico",
-    'ski_school': "Scuola di sci",
-    'stadium': "Stadio",
-    'stationery': "Cartoleria",
-    'supermarket': "Supermercato",
-    'swimming_area': "Piscina",
-    'swimming_pool': "Piscina",
-    'theatre': "Teatro",
-    'tipography': "Copisteria",
-    'train': "Fermata del treno",
-    'typography': "Copisteria",
-    'opening_hours': "Orari di apertura",
-    'phone': 'Telefono',
-    'website': "Sito web",
-    'internet_access': "Accesso a Internet",
-    'category': "Luogo",
-    'type': "Categoria",
-    'Healthcare':'Salute',
-    'Food': 'Ristorazione',
-    'Sport':'Sport',
-    'Culture':'Cultura',
-    'Transports': 'Trasporti',
-    'Outdoor':'Aree verdi',
-    'Utilities':'Utilità',
-    'time': 'Distanza (min)',
-    'distance': 'Distanza (metri)'
-}
+
+import json
+with open("../data/traduzioni.json","r", encoding="utf-8") as f:
+    traduction = json.load(f)
 
 pois = pois.fillna(np.nan).replace([np.nan], [None])
 # %%
@@ -414,7 +349,7 @@ def create_school_pois_map(p, pois, icons):
     
     # Creation of the main map
     m = folium.Map(location=[coords.y, coords.x],
-                             zoom_start=16, tiles=None)
+                             zoom_start=15, tiles=None)
     
     # Iterating over categories
     for name in set(pois['type']):
@@ -459,12 +394,12 @@ def create_school_pois_map(p, pois, icons):
     folium.TileLayer("cartodbpositron", name="Light").add_to(m)
     folium.TileLayer("CartoDB dark_matter", name="Dark").add_to(m)
     folium.TileLayer('openstreetmap', name="OpenStreetMap").add_to(m)
-    folium.LayerControl().add_to(m)
+    folium.LayerControl(collapsed=False).add_to(m)
     
     return m
-
 #%%
 # Generate map for all schools
-for i in range(len(schools)):
+for i in tqdm(range(343,len(schools))):
     create_school_pois_map(schools.iloc[i],pois,icons).save("../viz/pois/"+str(i)+".html")
     
+# %%

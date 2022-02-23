@@ -1,19 +1,29 @@
-#%%
+# %%
 import pandas as pd
 
-df = pd.read_csv("../data/population/ItalianPopulation2021.csv")
-#%%
-df = df[df['ITTER107'].isin(trentino['ITTER107'])].drop(['Flag Codes', 'Flags',
-                                                    'Seleziona periodo',"TIPO_DATO15",
-                                                    "Tipo di indicatore demografico", 'TIME'], axis=1)
+df = pd.read_csv("../data/population/pop_per_age_trentino.csv", dtype="str")
+df = df[(df['ITTER107'] != "ITD20") & (df['ITTER107'] != "ITD2") & (df['ETA1'] != "TOTAL") & (df['Stato civile'] == "totale")]
 
+# %%
+df.drop(['Flag Codes', 'Flags',
+              'Seleziona periodo', "TIPO_DATO15", 'STATCIV2','Stato civile',
+              "Tipo di indicatore demografico", 'TIME', 'SEXISTAT1', 'ETA1'], axis=1, inplace=True)
+
+# %%
+df.rename(columns = {
+    'ITTER107': 'Id',
+    'Territorio': 'Comune',
+    'Età':'Anni',
+    'Value':'Popolazione'
+}, inplace=True)
+
+df['Anni'] = [int(x.split(" ")[0]) for x in df['Anni']]
+df['Popolazione'] = df['Popolazione'].astype("int32")
+df['Comune'] = [x.title() for x in df['Comune']]
 #%%
 df.to_csv("../data/population/trentino_pop_per_age.csv", index=False)
 
 #%%
-df_new = pd.read_csv("../data/population/ItalianPopulation2021_2.csv")
-
-df_new = df_new[['ITTER107','Territorio','Sesso','Value']]
-df_new = df_new[df_new['ITTER107'].isin(trentino['ITTER107'])]
-
-df_new.to_csv("../data/population/total_trentino_pop.csv", index=False)
+# Pick total population per each municipality
+df = df.groupby(['Id','Comune','Sesso'], as_index = False).sum()[['Id','Comune','Sesso', 'Popolazione']]
+df.to_csv("../data/population/total_trentino_pop.csv", index=False)
