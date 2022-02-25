@@ -1,6 +1,14 @@
 # %%
 # Libraries to import
+import plotly.express as px
+import branca
+import datetime
+import osmnx as ox
+import json
+from tqdm import tqdm
+from ntpath import join
 from folium.plugins import Search
+import jinja2_time
 import numpy as np
 import pandas as pd
 import pygeos
@@ -143,7 +151,6 @@ schools_neighbour = gpd.GeoDataFrame(schools['neighbour'],
                                      crs=4326).dissolve(aggfunc=sum)
 
 selection = []
-from tqdm import tqdm
 for i in tqdm(range(len(pois))):
     if pois.loc[i, 'geometry'].within(schools_neighbour['geometry'][0]):
         selection.append(i)
@@ -163,18 +170,20 @@ icons = {
 }
 
 
-import json
-with open("../data/traduzioni.json","r", encoding="utf-8") as f:
+with open("../data/traduzioni.json", "r", encoding="utf-8") as f:
     traduction = json.load(f)
 
 pois = pois.fillna(np.nan).replace([np.nan], [None])
 # %%
+
+
 def get_pois_within_buffer(p, pois):
     # Getting the neighbour of the school
     buffer = p['neighbour']
     # Getting indexes of POIs around the school
     j = [i for i in range(len(pois)) if pois.loc[i, 'geometry'].within(buffer)]
     return pois.iloc[j]
+
 
 def generate_complete_popup(row):
     # Open the HTML popup table
@@ -236,13 +245,14 @@ def generate_complete_popup(row):
         """
     return text
 
+
 def generate_simple_popup(row):
     # Open the HTML popup table
     if row['name'] != None:
         header = row['name']
     else:
         header = traduction[row['category']]
-    
+
     text = """
         <!DOCTYPE html>
         <html>
@@ -255,7 +265,7 @@ def generate_simple_popup(row):
         """.format(header)
 
     # Iterate over columns
-    for c in ['opening_hours','phone','website','internet_access','category','type', 'time','distance']:
+    for c in ['opening_hours', 'phone', 'website', 'internet_access', 'category', 'type', 'time', 'distance']:
         # If the value is Null, don't insert it in the table
         if row[c] != None and row[c] != "nan":
             if c in ['website']:
@@ -274,13 +284,13 @@ def generate_simple_popup(row):
                     <td><a href = "tel:{}" target="_blank">{}</a></td>""".format(traduction[c], row[c], row[c]) + """
                 </tr>
                 """
-            elif c in ['category','type']:
+            elif c in ['category', 'type']:
                 text = text + """
                     <tr>
                         <td><b>{}</b></td>
                         <td>{}</td>""".format(traduction[c], traduction[row[c]]) + """
                     </tr>
-                """                
+                """
             else:  # No need for links or traductions
                 text = text + """
                     <tr>
@@ -297,47 +307,50 @@ def generate_simple_popup(row):
         """
     return text
 
-#%%
+
+# %%
 """
 Function to create a map for one single school,
 with all the Points of Interest around 1,000 meters
 
 p = row of the dataframe with all information about the school 
 """
-import osmnx as ox
-import datetime
-import branca
+
 
 def get_graph(p):
     G = ox.graph_from_point((p.y, p.x), network_type='walk')
     hwy_speeds = {"residential": 35, "secondary": 50, "tertiary": 60}
-    G = ox.add_edge_speeds(G,hwy_speeds=hwy_speeds)
+    G = ox.add_edge_speeds(G, hwy_speeds=hwy_speeds)
     G = ox.add_edge_travel_times(G)
     return G
-    
+
+
 def get_travel_time_distance(G, p1, p2):
     route = ox.shortest_path(G,
-                            ox.nearest_nodes(G, p1.x, p1.y),
-                            ox.nearest_nodes(G, p2.x, p2.y),
-                            weight='length')
+                             ox.nearest_nodes(G, p1.x, p1.y),
+                             ox.nearest_nodes(G, p2.x, p2.y),
+                             weight='length')
     seconds = sum(ox.utils_graph.get_route_edge_attributes(G, route, 'length'))
-    distance = int(sum(ox.utils_graph.get_route_edge_attributes(G, route, "length")))
-    time = str(datetime.timedelta(seconds=seconds)).split('.')[0][2:].split(":")
+    distance = int(
+        sum(ox.utils_graph.get_route_edge_attributes(G, route, "length")))
+    time = str(datetime.timedelta(seconds=seconds)
+               ).split('.')[0][2:].split(":")
     return [str(int(time[0]))+" min "+str(int(time[1]))+" sec", str(distance)+"m"]
 
 
 def create_school_pois_map(p, pois, icons):
     # Get all POIs around the school
-    pois = get_pois_within_buffer(p,pois)  
-    pois = pois.reset_index(drop=True) 
+    pois = get_pois_within_buffer(p, pois)
+    pois = pois.reset_index(drop=True)
     coords = p['geometry']
     G = get_graph(coords)
-    pois[['time', 'distance']] = [get_travel_time_distance(G, coords,poi) for poi in pois['geometry']] 
-    
+    pois[['time', 'distance']] = [get_travel_time_distance(
+        G, coords, poi) for poi in pois['geometry']]
+
     # Creation of the main map
     m = folium.Map(location=[coords.y, coords.x],
-                             zoom_start=15, tiles=None)
-    
+                   zoom_start=15, tiles=None)
+
     # Iterating over categories
     for name in set(pois['type']):
         # Feature Group
@@ -351,30 +364,30 @@ def create_school_pois_map(p, pois, icons):
             popup = folium.Popup(folium.Html(text, script=True), max_width=200)
             folium.Marker(location=[pois.loc[i, 'geometry'].y,
                                     pois.loc[i, 'geometry'].x],
-                        #popup = pois.loc[i,'name'],
-                        icon=folium.map.Icon(prefix='fa',
-                                            icon=icons[name]['icon'],
-                                            color=icons[name]['color']),
-                        popup = popup).add_to(fg)
+                          #popup = pois.loc[i,'name'],
+                          icon=folium.map.Icon(prefix='fa',
+                                               icon=icons[name]['icon'],
+                                               color=icons[name]['color']),
+                          popup=popup).add_to(fg)
 
-    
     # Generation of popup information
     text = generate_complete_popup(p)
     iframe = branca.element.IFrame(html=text, width=300, height=280)
     popup = folium.Popup(folium.Html(text, script=True), max_width=300)
-    
+
     # Insert the marker for the single school
     folium.Marker([coords.y, coords.x],
-                icon=folium.map.Icon(prefix='fa',
-                                    icon='graduation-cap',
-                                    color="red"),
-                popup=popup,
-                name=p['Nome'],
-                tooltip=p['Nome']).add_to(m)
+                  icon=folium.map.Icon(prefix='fa',
+                                       icon='graduation-cap',
+                                       color="red"),
+                  popup=popup,
+                  name=p['Nome'],
+                  tooltip=p['Nome']).add_to(m)
 
     # Neighbourhoods around schools
     fg = folium.FeatureGroup(name="Dintorni")
-    folium.GeoJson(p['neighbour'], style_function=lambda x: {'fillColor': '#fecc5cFF', 'color': '#fecc5cFF'}).add_to(fg)
+    folium.GeoJson(p['neighbour'], style_function=lambda x: {
+                   'fillColor': '#fecc5cFF', 'color': '#fecc5cFF'}).add_to(fg)
     fg.add_to(m)
 
     # Adding layers
@@ -382,11 +395,60 @@ def create_school_pois_map(p, pois, icons):
     folium.TileLayer("CartoDB dark_matter", name="Dark").add_to(m)
     folium.TileLayer('openstreetmap', name="OpenStreetMap").add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
-    
+
     return m
-#%%
+
+
+# %%
 # Generate map for all schools
-for i in tqdm(range(343,len(schools))):
-    create_school_pois_map(schools.iloc[i],pois,icons).save("../viz/pois/"+str(i)+".html")
-    
+for i in tqdm(range(343, len(schools))):
+    create_school_pois_map(schools.iloc[i], pois, icons).save(
+        "../viz/pois/"+str(i)+".html")
+
+# %%
+
+# Single School
+pois_number_df = pd.DataFrame()
+for i in tqdm(range(len(schools))):
+    pois_plot = get_pois_within_buffer(schools.iloc[i], pois)
+    single_school = pois_plot.groupby(['type']).size().to_frame("count")
+    single_school['place'] = [schools.loc[i, 'Nome']
+                              for x in range(len(single_school))]
+    single_school['Comune'] = [schools.loc[i, 'Comune']
+                               for x in range(len(single_school))]
+    single_school['index'] = [schools.loc[i, 'index']
+                              for x in range(len(single_school))]
+    pois_number_df = pd.concat([pois_number_df, single_school])
+pois_number_df['amenity'] = "School"
+# %%
+# Entire municipality
+municipality = pois_number_df.groupby(
+    ['Comune', 'type']).mean().reset_index().set_index('type')
+municipality['place'] = municipality['Comune']
+municipality['amenity'] = "Municipality"
+municipality.drop("index", axis=1, inplace=True)
+# Entire province
+province = pois_number_df.groupby(
+    ['type']).mean().reset_index().set_index('type')
+province['place'] = "Provincia di Trento"
+province['amenity'] = "Province"
+province.drop("index", axis=1, inplace=True)
+pois_plot = pd.concat([pois_number_df, municipality, province])
+pois_plot = pois_plot.reset_index()
+
+pois_plot.replace("Culture","Cultura",inplace=True)
+pois_plot.replace("Food","Ristorazione",inplace=True)
+pois_plot.replace("Healthcare","Salute",inplace=True)
+pois_plot.replace("Outdoor","Aree verdi",inplace=True)
+pois_plot.replace("Transports","Trasporti",inplace=True)
+pois_plot.replace("Utilities","Utilità",inplace=True)
+# %%
+for i in range(len(schools)):
+    school = schools.iloc[i]
+    subset = pois_plot[(pois_plot['index'] == school['index']) | ((pois_plot['Comune'] == school.Comune) & (
+        pois_plot['amenity'] == "Municipality")) | (pois_plot['place'] == "Provincia di Trento")].reset_index()
+    fig = px.bar(subset, x='place', y='count', color='type',
+        color_discrete_sequence=["#003e7f","#0068af","#5495e1","#E6AF2E","#ee6c4d","#dd4050","#a30b37"],
+        labels=dict(place="", count="Numero di luoghi nei dintorni", type="Categoria di luoghi"))
+    fig.write_html("../viz/barplot/"+str(i)+".html")
 # %%

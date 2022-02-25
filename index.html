@@ -46,6 +46,7 @@
         function update_pois_path() {
             school = $("#poi-select").val();
             $("#pois").attr("src", "viz/pois/" + school + ".html");
+            $("#pois-barplot").attr("src", "viz/barplot/" + school + ".html");
 
         }
         function update_route_isochrone() {
@@ -205,6 +206,9 @@
                 </div>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
             </div>
+           <div class="content">
+            <iframe id="pois-barplot" src="viz/barplot/0.html"></iframe>
+           </div> 
         </div>
 
         <!-- Fifth Grid -->
