@@ -13,19 +13,6 @@ import os
 
 # %%
 osm_tn_url = "https://osmit-estratti.wmcloud.org/dati/poly/province/pbf/022_Trento_poly.osm.pbf"
-# %%
-# If data is not downloaded yet, request from ISTAT
-if not os.path.exists('../data/Limiti01012021_g'):
-    # download the data
-    import requests
-    import zipfile
-    import io
-    zip_file_url = 'https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012021_g.zip'
-    # request the file
-    r = requests.get(zip_file_url, verify=False)
-    z = zipfile.ZipFile(io.BytesIO(r.content))
-    # unzip the file
-    z.extractall("../data/")
 
 # %%
 trentino = gpd.read_file("../data/Trentino/schools/schools.geojson",

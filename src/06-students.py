@@ -60,6 +60,10 @@ schools.replace('Moena - Moena', "Moena", inplace=True)
 schools.replace("Rovere' Della Luna", "Roverè Della Luna", inplace=True)
 schools.replace('San Giovanni Di Fassa - Sen Jan', "San Giovanni Di Fassa", inplace=True)
 schools.replace('Contá', "Contà", inplace=True)
+schools.replace("Luserna - Lusérn","Luserna", inplace=True)
+schools.replace("Panchia'","Panchià", inplace=True)
+schools.replace("Ruffre' - Mendola", "Ruffrè-Mendola", inplace=True)
+schools.replace("Soraga - Soraga", "Soraga Di Fassa", inplace=True)
 
 # Save file with changes
 schools.to_file("../data/Trentino/schools/schools.geojson")
@@ -139,10 +143,69 @@ stud_agg = students.groupby(['Comune'], as_index=False).sum()[
 stud_agg
 stud_schools = students.groupby(['Comune']).size().to_frame('Schools')
 stud_agg = stud_agg.set_index('Comune')
+#%%
+# Gather municipalities boundaries
+# %%
+# If data is not downloaded yet, request from ISTAT
+import os
+if not os.path.exists('../data/Limiti01012021_g'):
+    # download the data
+    import requests
+    import zipfile
+    import io
+    zip_file_url = 'https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012021_g.zip'
+    # request the file
+    r = requests.get(zip_file_url, verify=False)
+    z = zipfile.ZipFile(io.BytesIO(r.content))
+    # unzip the file
+    z.extractall("../data/")
+    
+#%%
+# Open Municipalities
+trentino = gpd.read_file("../data/Limiti01012021_g/Com01012021_g", encoding="utf-8")
+trentino = trentino[trentino['COD_PROV'] == 22]
+trentino = trentino.to_crs(4326)
+trentino = trentino[['COMUNE', 'PRO_COM_T','geometry']].reset_index(drop=True)
+trentino.rename(columns = {
+    'COMUNE': 'Comune',
+    'PRO_COM_T': 'Id'
+}, inplace=True)
+trentino['Comune'] = [x.title() for x in trentino['Comune']]
 
+trentino.set_index("Comune", inplace=True)
+trentino['Scuole totali'] = schools.groupby(['Comune']).size().to_frame("Scuole Totali")
+trentino['Scuole studenti'] = students.groupby(['Comune']).size().to_frame("Scuole_studenti")
+trentino[['Studenti','Classi']] = stud_agg
+trentino['Media stud per classe'] = round(trentino['Studenti']/trentino['Classi'],2)
+trentino['Media stud per scuola'] = round(trentino['Studenti']/trentino['Scuole studenti'],2)
+
+#%%
+# Loading data about Trentino Population per age
+pop_age = pd.read_csv("../data/population/trentino_pop_per_age.csv", dtype="str")
+pop_age.replace("San Giovanni Di Fassa-Sèn Jan", "San Giovanni Di Fassa", inplace=True)
+
+pop_age['Anni'] = pop_age['Anni'].astype("int32")
+pop_age['Popolazione'] = pop_age['Popolazione'].astype("int32")
+
+# Grouping by municipality and keeping only data of people below 22 years
+pop_age_tot = pop_age[(pop_age['Sesso']=="totale") & (pop_age['Anni']<20)].groupby(['Comune']).sum()
+pop_age_tot.rename(columns = {'Popolazione':'Pop under 20'}, inplace=True)
+
+pop_age_tot['Pop_mat'] = pop_age[(pop_age['Sesso']=="totale") & (pop_age['Anni'] <= 6) & (pop_age['Anni'] >= 2)].groupby(['Comune'],).sum()['Popolazione']
+pop_age_tot['Pop_ele'] = pop_age[(pop_age['Sesso']=="totale") & (pop_age['Anni'] >= 6) & (pop_age['Anni'] <= 11)].groupby(['Comune'],).sum()['Popolazione']
+pop_age_tot['Pop_med'] = pop_age[(pop_age['Sesso']=="totale") & (pop_age['Anni'] >= 11) & (pop_age['Anni'] <= 14)].groupby(['Comune'],).sum()['Popolazione']
+pop_age_tot['Pop_sup'] = pop_age[(pop_age['Sesso']=="totale") & (pop_age['Anni'] >= 14) & (pop_age['Anni'] <= 20)].groupby(['Comune'],).sum()['Popolazione']
+pop_age_tot['Popolazione'] = pop_age[pop_age['Sesso']=="totale"].groupby(['Comune']).sum()['Popolazione']
+pop_age_tot.drop(['Anni'],axis=1, inplace=True)
+
+#%%
+trentino[['Popolazione', 'Pop_mat','Pop_ele','Pop_med','Pop_sup','Pop under 20']] = pop_age_tot
+trentino.to_file("../data/aggregated_data_per_municipality.geojson")
+
+#%%
 # Geodata with information to make popup in the map
 import numpy as np
-geo_data = geojson.load(open("../data/trentino.geojson", encoding="utf-8"))
+geo_data = geojson.load(open("../data/aggregated_data_per_municipality.geojson", encoding="utf-8"))
 len(geo_data['features'])
 for s in geo_data['features']:
     # Total number of schools
@@ -172,27 +235,9 @@ from geojson import FeatureCollection
 resume_schools_municipalities = gpd.GeoDataFrame.from_features(FeatureCollection(geo_data))
 resume_schools_municipalities.rename(columns = {'population':'Popolazione'}, inplace=True)
 resume_schools_municipalities = resume_schools_municipalities.set_crs("EPSG:4326")
-# resume_schools_municipalities['Studenti'] = resume_schools_municipalities['Studenti'].astype("Int64")
-# resume_schools_municipalities['Classi'] = resume_schools_municipalities['Classi'].astype("Int64")
-# resume_schools_municipalities['density'] = resume_schools_municipalities['density'].astype("Float64")
-# resume_schools_municipalities['Media studenti per classe'] = resume_schools_municipalities['Media studenti per classe'].astype("Float64")
-# resume_schools_municipalities['Media studenti per scuola'] = resume_schools_municipalities['Media studenti per scuola'].astype("Float64")
 
 resume_schools_municipalities.drop(resume_schools_municipalities[resume_schools_municipalities['Studenti'].isna()].index, inplace=True)
-#%%
-# Loading data about Trentino Population per age
-pop_age = pd.read_csv("../data/population/trentino_pop_per_age.csv", dtype="str")
 
-pop_age['Anni'] = pop_age['Anni'].astype("int32")
-pop_age['Popolazione'] = pop_age['Popolazione'].astype("int32")
-
-# Grouping by municipality and keeping only data of people below 22 years
-pop_age_tot = pop_age[(pop_age['Sesso']=="totale") & (pop_age['Anni']<22)].groupby(['Id','Comune'], as_index=False).sum()[['Id','Comune','Popolazione']]
-
-pop_age_tot.rename(columns = {'Popolazione':'Pop under 20'}, inplace=True)
-
-# Rename it to make it match with ISTAT geojson
-pop_age_tot.replace("San Giovanni Di Fassa-Sèn Jan", "San Giovanni Di Fassa", inplace=True)
 
 #%%
 # Merge data about municipalities with population one
@@ -213,7 +258,6 @@ for s in geo_data['features']:
 resume_schools_municipalities = resume_schools_municipalities.reset_index()
 
 #%%
-gpd.GeoDataFrame(resume_schools_municipalities).to_file("../data/aggregated_data_per_municipality.geojson")
 # Saving aggregated data
 resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality.geojson")
 resume_schools_municipalities.to_file("../data/aggregated_data_per_municipality", driver="ESRI Shapefile")
