@@ -64,7 +64,7 @@
 
     <!-- Navbar -->
     <div class="w3-top" id="navbar">
-        <a href="#" >Home</a>
+        <a href="#">Home</a>
         <a href="#searchschool">Cerca
             Scuola</a>
         <a href="#density">School
@@ -83,10 +83,9 @@
 
     <!-- Header -->
     <header class="center container w3-white-text" style="padding:128px 16px; position:relative;">
-        <div id="particles-js">
-            <h1 class="w3-margin-top jumbo" style="padding-top:50px">Scuole in Trentino</h1>
-            <h4 class="w3-xlarge">Progetto di Geospatial Analysis</h4>
-        </div>
+        <h1 class="w3-margin-top jumbo">Scuole in Trentino</h1>
+        <h4 class="w3-xlarge">Progetto di Geospatial Analysis</h4>
+        <div id="particles-js"></div>
         <script src="particles.min.js"></script>
         <script src="particles.js"></script>
 
@@ -167,7 +166,7 @@
                 </p>
                 <select class="choose-school" onchange="update_route_isochrone()" value=0
                     placeholder="Cerca la tua scuola..." id="school-select"></select>
-                <form id="choose-transport" onchange="update_route_isochrone()" value="walk" style="float:right;">
+                <form id="choose-transport" onchange="update_route_isochrone()" value="walk">
                     <label>
                         <i class="fas fa-walking">
                             <input type="radio" name="choose-transport" value="walk" checked>
@@ -206,9 +205,9 @@
                 </div>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
             </div>
-           <div class="content">
-            <iframe id="pois-barplot" src="viz/barplot/0.html"></iframe>
-           </div> 
+            <div class="content">
+                <iframe id="pois-barplot" src="viz/barplot/0.html"></iframe>
+            </div>
         </div>
 
         <!-- Fifth Grid -->
