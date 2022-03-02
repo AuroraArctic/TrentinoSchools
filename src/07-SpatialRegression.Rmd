@@ -1,0 +1,855 @@
+---
+title: "Spatial Regression about Trentino Schools"
+output:
+  html_document:
+    theme: spacelab
+---
+
+> *"The first law of geography: Everything is related to everything else, 
+> but near things are more related than distant things."* Waldo R. Tobler (Tobler 1970)^[Tobler, Waldo R. 1970. "A Computer Movie Simulating Urban Growth in the Detroit Region." Economic Geography 46 (2): 234–40. http://www.geog.ucsb.edu/~tobler/publications/pdf_docs/A-Computer-Movie.pdf.]
+
+```{r message=FALSE, warning=FALSE}
+# Libraries
+library(tidyverse)
+library(spdep)
+library(rgdal)
+library(sf)
+library(sp)
+library(rgeos)
+library(terra)
+library(DT)
+```
+
+## Reading data
+
+The necessary data for this type of analysis are:
+
+-   the shapefile with the aggregated data per municipality about schools number, students, classes and population;
+-   a shapefile with every single school in the Province of Trento, represented as points.
+
+
+```{r fig.align='center'}
+# Read municipality data
+tn <- readOGR("../data/aggregated_data_per_municipality", encoding="UTF-8")
+# Setting the CRS
+tn <- spTransform(tn, CRS("+init=epsg:4326"))
+
+# Function to replace NAs with 0
+na.zero <- function (x) {
+    x[is.na(x)] <- 0
+    return(x)
+}
+
+# Replace NAs about municipalities' number of schools with 0s
+tn@data$Scuole.tot = na.zero(tn@data$Scuole.tot)
+
+# Plot the municipalities in Trentino
+par(mar=c(0,0,0,0))
+plot(tn, axes = F, border="grey")
+```
+
+It is worth noticing from the map of school points that many of them overlap, especially in the Adige's Valley and most populated areas, such as Trento, Rovereto and Riva del Garda. 
+
+```{r fig.align='center'}
+# Import shapefile as SpatialPointsDataFrame
+schools <- readOGR("../data/Trentino/schools/schools.shp",verbose = FALSE)
+
+# Setting the CRS
+schools <- spTransform(schools, CRS("+init=epsg:4326"))
+
+# Plot schools over Trentino's map
+par(mar=c(0,0,0,0))
+plot(tn, border = "grey", axes = F)
+points(schools@coords, col = "#f27059", cex = 1, pch = 1)
+```
+
+## Descriptive spatial statistics (global analysis)
+
+### Centroids
+
+<aside style="background-color: #f7c9cf; border-radius:10px; padding: 10px; margin-bottom: 20px;">
+💡 The centroid of a radial projection of a region of the Earth's surface to sea level is the region's geographical center^[Wikipedia page of Centroid, https://en.wikipedia.org/wiki/Centroid]. Therefore, the centroid represents the centre of a polygon, computed as the mean position of all points that make up the polygon^[How to find the centre of a polygon i Python, https://deparkes.co.uk/2015/02/28/how-to-find-the-centre-of-a-polygon-in-python/].  
+</aside>
+
+Before starting with the global analysis of Trentino municipalities, it is necessary to select some representative points for each municipality as unique reference to the spatial coordinate. 
+
+```{r fig.align='center'}
+par(mar=c(0,0,0,0))
+plot(tn, border="grey")
+points(coordinates(tn), 
+       col="red", 
+       bg = "#EF798A", 
+       pch = 21,  
+       lwd = 1.5)
+```
+
+Commonly, the centroid is a good choice, but still some problems can emerge and the centroid may not fall inside the boundaries of the territory. In this particular case, this may happen with multipolygons shape, i.e. those municipalities represented by a multiple number of polygons that do not share a boundary. Some examples are the municipalities of Tione di Trento, Ronzone, Stenico, Calliano, Pellizzano and Riva del Garda. Some municipalities, as Luserna, find their centroid in another territory because of their shape.
+
+The plot depicts all those municipalities whose centroid is outside their actual territory. As can be seen, most of them have little zones outside the main one, while others (e.g. Predaia and Luserna) just have awkward shapes. 
+
+```{r fig.align="center", dpi=300, fig.width= 11, fig.height = 11}
+tn_coords = coordinates(tn)
+tn@data$centroid = tn_coords
+colorize = c()
+for(i in 1:166){
+  colorize = append(colorize, point.in.polygon(tn$centroid[i,1],
+                                               tn$centroid[i,2],
+                                               tn@polygons[i][[1]]@Polygons[[1]]@coords[,1],
+                                               tn@polygons[i][[1]]@Polygons[[1]]@coords[,2]))
+}
+par(mar = c(0,0,0,0))
+plot(tn, col = ifelse(colorize, "white","lightgrey"), border="grey")
+text(tn_coords, labels = ifelse(colorize, "" ,tn@data$Comune), cex=0.6)
+```
+
+Instead of recurring to `coordinates()`, we could use `gCentroid` to obtain an alternative version of centroids. For most of the cases, these two versions coincide, but for those municipalities with multiple polygons points may differ (e.g. Soraga di Fassa in the upper right part). Since it computes a sort of mean point, making the centroid being part of other territories, the rest of the notebook will relate to the previous version (i.e. `coordinates`), despite inaccurate in some cases.
+
+```{r fig.align='center'}
+par(mar=c(0,0,0,0))
+trueCentroids = gCentroid(tn,byid=TRUE)
+plot(tn, border="grey")
+points(coordinates(tn),pch=1, col="blue")
+points(trueCentroids,pch=2, col="red")
+```
+
+⚠️  *Note that, instead, school dataset contains points and not polygons, therefore no problem occurs with the centroid computation. Also, since many schools have same coordinates because in the same building, the centroids will only consider unique points, reducing the dataset from 724 to 599 unique points.*
+
+### K-Nearest Neighbour
+
+Since there are various definitions of neighbourhood, we will try to explore three of them in the following sections, starting from K-nearest neighbour.
+
+<aside style="background-color: #f7c9cf; border-radius:10px; padding: 10px; margin-bottom: 20px;">
+💡 The k-nearest neighbours criterion implies that two spatial units are considered as neighbours if their distance is equal, or less than equal, to the minimum possible distance that can be found amongst all the observations. Following this definition, it can be ensured that each spatial unit has exactly the same number $k$ of neighbours. 
+</aside>
+
+Since there is no way to choose a specific value for $k$, we can iterate over a customized range, let's say from 1 to 20 neighbours (i.e. schools). The following code generates an image for each value of $k$.
+
+```{r message=FALSE, warning=FALSE}
+# Saving schools coordinates
+school_coords = coordinates(schools)
+```
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+# Save frame per frame
+for(i in 1:20){
+    png(paste0("../viz/knn/",i,".png"),res=300, width=1000, height=1000)
+    k <- knn2nb(knearneigh(school_coords, k = i, longlat=T))
+    par(mar = c(0,0,0,0))
+    plot(tn, border = "grey80", axis = tn, lwd=0.5)
+    plot(k, school_coords, lwd=.6, col=alpha("#F27059",alpha=0.5), 
+       cex = .3, add=TRUE, points=FALSE)
+    dev.off()
+}
+```
+
+⚠️  *Note that through the function `saveGIF()`^[saveGIF() documentation https://www.rdocumentation.org/packages/animation/versions/2.4.1/topics/saveGIF] it would be possible to save frames as animation, lowering the resolution of the image obtained. Saving each frame will also allow users to select a customized value for $k$ and look at how the map changes inside the website*.
+
+```{r echo=FALSE, fig.align='center', fig.cap="KNN on Trentino Schools", fig.pos='h', out.width='90%'}
+knitr::include_graphics("../viz/knn/knn.gif")
+```
+
+As $k$ is increased, each school finds more and more neighbours, approaching also further points. If we focus on the first frame with $k=1$, we may notice that some schools are isolated, since their closest neighbour requires long lines to be reached. An example is the municipality of Vermiglio, in the upper left part of Trentino, in the western boundary. There are in fact $3$ schools in Vermiglio and one of them is near the boundary, far from other schools. A similar situation happens to Rabbi and Malé, to Luserna and Lavarone, but still Vermiglio is the municipality with the longest distance between schools within the local territory.
+
+```{r fig.height=9, fig.width=9, message=FALSE, warning=FALSE}
+k <- knn2nb(knearneigh(school_coords, k = 1, longlat=T))
+par(mar = c(0,0,0,0))
+plot(tn, border = "grey80", axis = tn, lwd=0.5)
+plot(k, school_coords, lwd=.6, 
+     col=alpha("#F27059",alpha=0.5), 
+     cex = .3, add=TRUE, points=FALSE)
+text(tn_coords, labels = ifelse(tn@data$Comune %in% c("Vermiglio","Rabbi","Malé","Luserna","Lavarone","Predaia"),tn@data$Comune, ""), cex=0.6)
+```
+
+
+On the other hand, at the extreme opposite, with $k=20$, we obtain the network of schools in Trentino, looking at the $20$ closest schools around each point. Trento and Rovereto are the most intertwined zones, while green areas as Adamello-Brenta Natural Park (west boundary) and Valsugana (empty zone in the right part of the map) lack in the number of schools. In fact, as can be seen by the length of lines, distances between schools tend to increase by moving from the Adige Valley to the east and west boundary.
+
+```{r echo=FALSE, fig.align='center', fig.cap="KNN with k=20", fig.pos='h', fig.width=11, fig.height=11}
+knitr::include_graphics("../viz/knn/20_parks.png")
+```
+
+If instead we focus on the municipalities, we can limit to a lower $k$, since we talk about polygons with other territories at their boundary, while some schools points may result isolated with low values of $k$. By looking at $k=5$ plot, we may notice how all municipalities are linked to each other, despite it does not seem so in the territory above Borgo Valsugana, where Dolomites can be found. 
+
+```{r fig.align='center', message=FALSE, warning=FALSE}
+knn1 = knn2nb(knearneigh(tn_coords, k = 1, longlat=T))
+knn2 = knn2nb(knearneigh(tn_coords, k = 2, longlat=T))
+knn3 = knn2nb(knearneigh(tn_coords, k = 3, longlat=T))
+knn4 = knn2nb(knearneigh(tn_coords, k = 4, longlat=T))
+knn5 = knn2nb(knearneigh(tn_coords, k = 5, longlat=T))
+
+par(mar=c(0,0,0,0))
+plot(tn, border = "grey80", axis = tn, lwd=0.5)
+    plot(knn5, tn_coords, lwd=.6, col=alpha("#F27059",alpha=0.5), 
+         cex = .3, add=TRUE, points=FALSE)
+```
+
+### Critical cut-off
+
+<aside style="background-color: #f7c9cf; border-radius:10px; padding: 10px; margin-bottom: 20px;">
+💡 According to the critical cut-off criterion, two spatial units are considered neighbours if their distance is equal to, or less than equal to, a certain fixed distance, the **critical cut-off**. This cut-off distance should be greater or equal to the mininum distance necessary to assign at least one neighbour to all points.
+
+</aside>
+
+Our aim in this section will be to find the minimum threshold distance which allows all regions/points to have at least one neighbour. By setting $k=1$ in the k-nearest neighbour, we can first compute the nearest neighbour to each school and the relative distance and then get the maximum distance among them.
+
+```{r warning=FALSE}
+knn1<- knn2nb(knearneigh(school_coords,
+                         k=1,
+                         longlat=T))
+all.linked <- max(unlist(nbdists(knn1,
+                                 school_coords,
+                                 longlat=T))) 
+all.linked
+```
+
+According to the results, all schools have a neighbour at at least `r all.linked` km. This implies that the cut-off distance has to be greater than it. However, notice from the following plot the distribution of school distances: the majority of them is near $0$km, following a long tail distribution. This may happen in big cities, as Trento and Rovereto, where there are a lot of schools and the minimum distance between them lowers.
+
+```{r fig.align = 'center'}
+distances = unlist(nbdists(knn1,school_coords,longlat=T))
+ggplot()+
+    geom_histogram(aes(x=distances), fill='#F27059', bins=50)+
+    labs(title = "Distribution of distances between schools")+
+  theme_minimal()
+```
+
+```{r}
+knn1<- knn2nb(knearneigh(tn_coords,
+                         k=1,
+                         longlat=T))
+all.linked <- max(unlist(nbdists(knn1,
+                                 tn_coords,
+                                 longlat=T))) 
+all.linked
+```
+We can repeat the same computation on municipalities centroids, discovering that every municipality has a neighbour at at least `r all.linked` km, slightly greater than the previous cut-off distance, which could mean that there are multiple schools in every municipality or that they are close enough to the boundary to be neighbour of other municipalities' schools.
+Analyzing the distribution of distances between municipalities, we may notice that the majority of them distances from others from $2$ to $4$km.
+
+```{r fig.align="center"}
+distances = unlist(nbdists(knn1,tn_coords,longlat=T))
+ggplot()+
+    geom_histogram(aes(x=distances), fill='#F27059', bins=50)+
+    labs(title="Distribution of distances between schools")+
+  theme_minimal()
+```
+
+
+We can try different neighbourhood definitions for different values of the cut-off distance, starting from the minimum threshold found before (i.e. $9.18$km).
+
+```{r}
+dnb10 <- dnearneigh(school_coords, 0, 10, longlat=TRUE); dnb10
+dnb15 <- dnearneigh(school_coords, 0, 15, longlat=TRUE); dnb15
+dnb20 <- dnearneigh(school_coords, 0, 20, longlat=TRUE); dnb20
+dnb25 <- dnearneigh(school_coords, 0, 25, longlat=TRUE); dnb25
+dnb30 <- dnearneigh(school_coords, 0, 30, longlat=TRUE); dnb30
+```
+
+As the cut-off distance increases, the number of links grows rapidly. Based on the visualization, we could have stopped at 20, where nearly every school is connected to others.
+
+```{r fig.align='center', dpi=300, fig.width=11, fig.height=11}
+plot_neighbour = function(model, coords, title){
+    par(mar=c(0,0,1,0))
+    plot(tn, border="grey",xlab="",ylab="",xlim=NULL)
+    title(main=title, cex.main=0.8) 
+    plot(model, coords, add=TRUE, col="#F27059", pch=16, lwd = 1, points=FALSE)
+}
+
+par(mfrow = c(3,2))
+plot_neighbour(dnb10, school_coords, "d nearest neighbours, d = 10")
+plot_neighbour(dnb15, school_coords, "d nearest neighbours, d = 15")
+plot_neighbour(dnb20, school_coords, "d nearest neighbours, d = 20")
+plot_neighbour(dnb25, school_coords, "d nearest neighbours, d = 25")
+plot_neighbour(dnb30, school_coords, "d nearest neighbours, d = 30")
+```
+
+
+The same approach could be applied to municipalities data, obviously creating a network based on the territories around a certain area. Remembering that the cut-off threshold in this case is above $11$, we can start with $12$.
+
+```{r fig.align='center', dpi=300, fig.width=11, fig.height=11}
+dnb12 <- dnearneigh(tn_coords, 0, 12, longlat=TRUE); dnb12
+dnb16 <- dnearneigh(tn_coords, 0, 16, longlat=TRUE); dnb16
+dnb20 <- dnearneigh(tn_coords, 0, 20, longlat=TRUE); dnb20
+dnb24 <- dnearneigh(tn_coords, 0, 24, longlat=TRUE); dnb24
+dnb30 <- dnearneigh(tn_coords, 0, 30, longlat=TRUE); dnb30
+
+par(mfrow = c(3,2))
+plot_neighbour(dnb12, tn_coords, "d nearest neighbours, d = 12")
+plot_neighbour(dnb16, tn_coords, "d nearest neighbours, d = 16")
+plot_neighbour(dnb20, tn_coords, "d nearest neighbours, d = 20")
+plot_neighbour(dnb24, tn_coords, "d nearest neighbours, d = 24")
+plot_neighbour(dnb30, tn_coords, "d nearest neighbours, d = 30")
+```
+
+Also in this case the number of connections grows rapidly, indicating how close the municipalities are between each other. Consider that the maximum distance within province of Trento between municipalities is around 120km (considering the centroids, therefore the actual distance is greater), but over the $75\%$ of municipalities has an area below $50km^2$, which allows them to be connected with brief distances. 
+
+```{r}
+# Quantiles of areas of municipalities within the Province of Trento
+tn@data$area = round(area(tn)/ 1000000,3)
+area = tn@data %>%
+    arrange(desc(area)) %>%
+    select(Comune, area) 
+quantile(area$area)
+
+# Find max distance within the province centroids
+library(geosphere)
+diff = c()
+for(i in 1:166 ){
+  for (j in 1:166){
+ diff = append(diff, distm(tn_coords[i,],tn_coords[j,], fun = distHaversine))
+  }
+}
+# Maximum distance between centroids within the province of Trento
+max(diff)/1000
+```
+
+### Contiguity based approach
+
+<aside style="background-color: #f7c9cf; border-radius:10px; padding: 10px; margin-bottom: 20px;">
+💡 According to this approach, two spatial units are considered as neighbours if they share a common boundary. 
+</aside>
+
+Since schools are represented as points, we will use municipalities data to connect territories with common boundary, i.e. multiple municipalities around. From the visualization it is worth noticing the spiderweb created around the municipalities on the inside of Trentino, while those more disconnected are placed on the border of the Province, especially the territories on the upper right part of the map (e.g. Canazei, San Giovanni di Fassa, Mazzin, Campitello di Fassa, Soraga di Fassa, Moena).
+
+```{r fig.align='center'}
+par(mar=c(0,0,0,0))
+contnb_q <- poly2nb(tn, queen=T)
+plot(tn, border="grey")
+plot(contnb_q, tn_coords, add=TRUE, col="#EF798A")
+points(coordinates(tn), 
+       col="red", 
+       bg = "#EF798A", 
+       pch = 21,  
+       lwd = 1.5)
+```
+
+
+⚠️ *Note that there are 166 municipalities in the Province of Trento. By sorting them according to the shape area, we get that the biggest areas do not share at least one boundary, since they take place on the border or in mountainous zones; while Trento occupies a central position.*
+
+```{r fig.align="center"}
+area%>%
+  DT::datatable()
+```
+
+
+```{r echo=FALSE, fig.align="center"}
+par(mar = c(0,0,0,0))
+plot(tn, col = ifelse(tn@data$Comune %in% area[1:10,'Comune'], "lightgrey" , "white"), border="grey")
+text(tn_coords, labels = ifelse(tn@data$Comune %in% area[1:10,'Comune'], tn@data$Comune , ""), cex=0.6)
+```
+
+## Spatial Weights
+
+After the definition of neighbourhoods, we can create spatial weights matrices, one for each neighbour list previously created.
+
+```{r}
+# K-nearest neighbour
+knn1.list = nb2listw(knn1)
+knn2.list = nb2listw(knn2)
+knn3.list = nb2listw(knn3)
+knn4.list = nb2listw(knn4)
+knn5.list = nb2listw(knn5)
+# Critical cut-off
+dnb12.list = nb2listw(dnb12,style="W")
+dnb16.list = nb2listw(dnb16,style="W")
+dnb20.list = nb2listw(dnb30,style="W")
+dnb24.list = nb2listw(dnb24,style="W")
+dnb30.list = nb2listw(dnb30,style="W")
+# Contiguity based approach
+contnb_q.list = nb2listw(contnb_q)
+
+# List with weights lists and their name
+weights = list(
+    list(knn1.list, "K-nearest neighbour (k=1)"),
+    list(knn2.list, "K-nearest neighbour (k=2)"),
+    list(knn3.list, "K-nearest neighbour (k=3)"),
+    list(knn4.list, "K-nearest neighbour (k=4)"),
+    list(knn5.list, "K-nearest neighbour (k=5)"),
+    list(dnb12.list, "Critical cut-off neighbourhood (d=12)"),
+    list(dnb16.list, "Critical cut-off neighbourhood (d=16)"),
+    list(dnb20.list, "Critical cut-off neighbourhood (d=20)"),
+    list(dnb24.list, "Critical cut-off neighbourhood (d=24)"),
+    list(dnb30.list, "Critical cut-off neighbourhood (d=30)"),
+    list(contnb_q.list, "Contiguity-based neighbourhoord")
+)
+```
+
+## Moran's I test of spatial autocorrelation
+
+<aside style="background-color: #f7c9cf; border-radius:10px; padding: 10px; margin-bottom: 20px;">
+💡 Measures of spatial autocorrelation describe the degree to which observations at spatial locations are similar to each other.
+</aside>
+
+In the section, we will focus on Moran's I test of spatial autocorrelation of Trentino Schools, in particular on the number of schools and students that populate every municipality. Let's start plotting the distribution of some features over the territory.
+
+⚠️ *Note that we do not hold data about students of all schools in Trentino, therefore some data might be missing. In these cases, the plots below will show the respective area in white*. 
+
+
+```{r dpi=300, fig.align="center", fig.width=20, fig.height=30}
+cols = list(tn$Scuole.tot,tn$Studenti, tn$Classi, tn$Media.st_1, tn$Pop_stud.P, tn$Stud.Pop_s, tn$Media.stud)
+titles = c("Schools","Students","Classes","Mean of students per school","Population under 20 over Total Population", "Students over Population under 20", "Mean students per class")
+colours <- c("#fedb71","#FCD471","#facd71","#f6bf70","#eea26f","#EA946F","#e6866e","#e2786e","#e0716e","#dd696d")
+
+na.ignore = function(x){
+  x[is.na(x)] <- -1
+  return(x)
+}
+
+par(mfrow=c(4,2),mar = c(0,0,1.7,0))
+for(i in 1:7){
+    c = na.ignore(unlist(cols[i]))
+    brks <- round(quantile(c, seq(0,1,0.1)), digits=3)
+    plot(tn, col=ifelse(c==-1,
+                        "#ffffff",
+                        colours[findInterval(c, brks, all.inside=TRUE)]),
+         main = titles[i], cex.main=2.5)
+}
+```
+
+
+Now we can try to compute the Moran's test based on all the previous definitions of neighborhood and with the previous features exposed, trying to find some spatial autocorrelation.
+
+```{r}
+Neighbourhood = c()
+Column = c()
+Sd = c()
+p_value = c()
+Moran_I_statistic = c()
+Mean = c()
+Var = c()
+Assumption = c()
+
+# Iterate over columns
+for(i in 1:length(cols)){
+  # Iterate over neighbourhood
+  for (w in weights) {
+    c = na.zero(unlist(cols[i]))
+    # Iterate over assumptions
+    for (rand in c(T,F)) {
+      Neighbourhood = append(Neighbourhood, w[[2]])
+      res = moran.test(c, w[[1]], randomisation = rand)
+      Column = append(Column, titles[i])
+      Sd = append(Sd, round(as.numeric(res[[1]]),4))
+      p_value = append(p_value, round(as.numeric(res[[2]]), 4))
+      Moran_I_statistic = append(Moran_I_statistic, round(as.numeric(res[[3]][1]),4))
+      Mean = append(Mean, round(as.numeric(res[[3]][2]),4))
+      Var = append(Var, round(as.numeric(res[[3]][3]),4))
+      if(rand) {
+        Assumption = append(Assumption, "Randomization")
+      }else{
+        Assumption = append(Assumption, "Normality")
+      }
+    }
+    Neighbourhood = append(Neighbourhood, w[[2]])
+    res = moran.mc(c, w[[1]], nsim=999)
+    Column = append(Column, titles[i])
+    Sd = append(Sd,round(as.numeric(res[[1]]),4))
+    p_value = append(p_value, round(res$p.value),4)
+    Moran_I_statistic = append(Moran_I_statistic, round(res$statistic,4))
+    Mean = append(Mean, "")
+    Var = append(Var, "")
+    Assumption = append(Assumption, res$method)
+  }
+}
+
+# create df with results and show them
+res_df = data.frame(Column, Neighbourhood, Moran_I_statistic, p_value,
+                    Sd, Mean, Var, Assumption)
+
+res_df %>%
+  arrange(desc(abs(Moran_I_statistic)), p_value) %>%
+  DT::datatable()
+```
+
+By ordering results according to the absolute value of the Moran's I statistics, we can see that the highest statistics obtained are around the $[0.1789, 0.1952]$ interval, got in all three assumptions. Albeit mean students per school seem to be the column with highest Moran's statistics, the p-value is not below the threshold of $0.05$ for the majority of its observations. In fact, the mean of students per school results significative with neighbourhoods knn (k=5) and critical cut-off with d=16. 
+
+On the other hand, the proportion of Population under 20 over the total population seems significative with every configuration, except for some knns neighbourhoods. However, Moran's statistics is lower than the ones gathered considering the mean of students per school. 
+
+Both these two columns show a positive spatial autocorrelation, while negative ones are associated to the number of Students over the Population under 20, with low p-value and minimum value $-0.1296$ for Moran's I statistics. 
+
+```{r}
+res_df%>%
+  group_by(Column) %>%
+  summarise("Median Moran" = median(Moran_I_statistic), "Median p-value" =  median(p_value), 
+            "Mean Moran" = round(mean(Moran_I_statistic),4), "Mean p-value" = round(mean(p_value),4)) %>%
+  DT::datatable()
+```
+Considering an aggregated table with median and mean statistics and p-value, we can confirm that the columns with highest statistics are:
+
+* Mean of students per school, 
+* Population under 20 over Total Population, 
+* Students over Population under 20,
+* Mean of students per class. 
+
+The low mean and median p-values for Students confirms the absence of spatial autocorrelation based on the number of students. Nearly the same happens to the number of Classes and Schools. 
+
+## Moran's I test of spatial autocorrelation in OLS residuals
+
+<aside style="background-color: #f7c9cf; border-radius:10px; padding: 10px; margin-bottom: 20px;">
+💡 Since nearby observations can be similar, it may not be fair to consider these cases as independent. It is important to evaluate the spatial autocorrelation in the residuals of regression models, since they are supposed to be independent. If the residuals are spatially autocorrelated, the model is misspecified. The Moran's I test can also be used as a diagnostic tool to detect the presence of spatial autocorrelation in the residuals of a linear regression model.^[Spatial regression models documentation, https://rspatial.org/raster/analysis/7-spregression.html]
+</aside>
+
+### Residuals test with Mean of students per school
+
+Let's start by trying to model the mean students per school with all the remaining features we have explored. The summary shows that all predictors are significant, except for the population under 20 over total population.
+
+```{r}
+LinearMean <- lm(tn$Media.stud ~ Stud.Pop_s+Scuole.tot+Classi+Media.st_1+Pop_stud.P+Studenti, tn)
+summary(LinearMean)
+```
+
+With the step function it is possible to simplify this model considering only those features with high significance, excluding the features with no significance (i.e. Pop_stud.P).
+
+```{r}
+# Searching for a simplified model where every feature has high significance
+LinearMean = step(LinearMean)
+summary(LinearMean)
+```
+
+
+The plot of the studentized residuals of the linear model can give us a hint about the presence of spatial dependence in the residuals. In fact, some similarities may be found in the east part, near the border and within the Adamello Brenta Park. 
+
+```{r fig.align="center"}
+par(mar=c(0,0,1,0))
+studres <- rstudent(LinearMean)
+resdistr <- round(quantile(studres, seq(0,1,0.1)), digits=3)
+#colours <- grey((length(resdistr):2)/length(resdistr))
+plot(tn, col=colours[findInterval(studres, resdistr, all.inside=TRUE)],
+     main = "Residuals quantiles in Trentino")
+```
+
+The command that allows to perform the Moran's I test in the OLS residuals is the function `lm.morantest()`. In the following chunk, the test to the studentized residuals of the linear Solow model, for different specifications of the spatial weights matrix. This method will be applied to all neighbourhoods definition, except KNN with $k$ lower than 4 and the contiguity neighbourhood, since they return unusual results. 
+
+```{r}
+ols_res = data.frame(Neighbourhood = c(""),
+                     Moran = c(""),
+                     p_value = c(""))
+# Moran test on residuals
+for(i in 4:11){
+  t = lm.morantest(LinearMean,weights[[i]][[1]],resfun=rstudent)
+  ols_res = rbind(ols_res, c(weights[[i]][[2]],
+                             t$estimate['Observed Moran I'],
+                             t$p.value))
+}
+ols_res$Moran = as.numeric(ols_res$Moran)
+ols_res$p_value = as.numeric(ols_res$p_value)
+ols_res %>%
+  arrange(desc(abs(Moran))) %>%
+  filter(!is.na(Moran)) %>%
+  DT::datatable()
+```
+The obtained results provide a negative spatial autocorrelation, but the p-value is far from being below to the threshold to confirm this hypothesis. Therefore, no spatial autocorrelation is found in the residuals of this model. 
+
+### Residuals test with Pop under 20 over total population
+
+By focusing instead on the population under 20 over the total population for each municipality, we obtain from the summary that only the mean students per class is significative. 
+```{r}
+LinearPop <- lm(tn$Pop_stud.P ~ Stud.Pop_s+Scuole.tot+Classi+Media.st_1+Media.stud+Studenti, tn)
+summary(LinearPop)
+```
+By applying the step function, the mean of students per school and the number of classes are erased. However, the adjusted r-squared is too low to guarantee the quality of this model.
+
+```{r}
+# Searching for a simplified model where every feature has high significance
+LinearPop = step(LinearPop)
+summary(LinearPop)
+```
+
+```{r}
+ols_res = data.frame(Neighbourhood = c(""),
+                     Moran = c(""),
+                     p_value = c(""))
+# Moran test on residuals
+for(i in 4:11){
+  t = lm.morantest(LinearPop,weights[[i]][[1]],resfun=rstudent)
+
+  ols_res = rbind(ols_res, c(weights[[i]][[2]],
+                             t$estimate['Observed Moran I'],
+                             t$p.value))
+}
+ols_res$Moran = as.numeric(ols_res$Moran)
+ols_res$p_value = as.numeric(ols_res$p_value)
+ols_res %>%
+  arrange(desc(abs(Moran))) %>%
+  filter(!is.na(Moran)) %>%
+  DT::datatable()
+```
+
+In this case instead, we can notice how low the p-value is, sometimes even below the 0.05 threshold. This may indicate the presence of spatial autocorrelation in the residuals, especially with knn k=5 and consequently that the model is misspecified. Equivalent results have been obtained by rotating and discarding some predictors. 
+
+If spatial autocorrelation is present it will violate the assumption about the independence of residuals and call into question the validity of hypothesis testing^[Spatial Autocorrelation, https://ibis.geog.ubc.ca/courses/geob479/notes/spatial_analysis/spatial_autocorrelation.htm#], leading to the rejection of the Population under 20 over the total population. 
+
+```{r fig.align="center"}
+par(mar=c(0,0,1,0))
+studres <- rstudent(LinearPop)
+resdistr <- round(quantile(studres, seq(0,1,0.1)), digits=3)
+#colours <- grey((length(resdistr):2)/length(resdistr))
+plot(tn, col=colours[findInterval(studres, resdistr, all.inside=TRUE)],
+     main = "Residuals quantiles in Trentino")
+```
+
+## Local Analysis
+
+<aside style="background-color: #f7c9cf; border-radius:10px; padding: 10px; margin-bottom: 20px;">
+💡 The Moran scatter plot consists of a plot with the spatially lagged variable on the y-axis and the original variable on the x-axis. The slope of the linear fit to the scatter plot equals Moran's I, while the two dashed lines represent the mean values of x-axis (vertical line) and the y-axis (horizontal line). 
+
+These two lines help to decompose the scatterplot into four quadrants:
+
+* HH: the upper right quadrant, where both x and y are above the average;
+* HL: the lower right part, with x above average and y below;
+* LH: the upper left part, with x below the average and y above;
+* LL: the lower left quadrant, with both x and y below the average. 
+
+The regions which fall into the HH and LL quadrants are characterized by positive spatial autocorrelation and are surrounded by regions with similar values. Conversely, HL and LH quadrants identify local patterns of negative spatial autocorrelation since they collect the regions with a high (respectively low) value of x and, in opposition, a low (respectively high) value of y. These regions are surrounded by other regions with dissimilar values.   
+</aside>
+
+### Moran's Scatterplot on Population under 20 over Total Population
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+mps = list()
+for (w in weights) {
+    mps = append(mps, list(moran.plot(
+        na.zero(tn$Pop_stud.P), 
+        listw = w[[1]], 
+        labels = tn$Comune)))
+    print(w[[2]])
+}
+tn@data
+par(mfrow = c(4,3))
+i = 1
+plots = list()
+for(mp in mps){
+    xname <- attr(mp, "xname")
+    p = ggplot(mp, aes(x=x, y=wx)) + geom_point(shape=1) + 
+        geom_smooth(formula=y ~ x, method="lm", color = "#EF798A", fill="#EF798A") + 
+        geom_hline(yintercept=mean(mp$wx), lty=2) + 
+        geom_vline(xintercept=mean(mp$x), lty=2) + theme_minimal() + 
+        geom_point(data=mp[mp$is_inf,], aes(x=x, y=wx), shape=9) +
+        geom_text(data=mp[mp$is_inf,], aes(x=x, y=wx, label=labels, vjust=1.5), size=3) +
+        xlab(xname) + ylab(paste0("Spatially lagged ", xname))+
+        labs(title=weights[i][[1]][[2]])
+    plots = append(plots, p)
+    ggsave(p, filename = paste0("students_pop_",weights[i][[1]][[2]],".png"), path = "../viz/moran_scatterplot/", dpi=300)
+    i = i+1
+}
+```
+
+The following grid of images shows the Moran's Scatterplot within all different notions of neighborhoods. The membership of municipalities inside a quadrant or another changes according to the neighbourhood definition. For instance, Novaledo often switches from HH to HL quadrant and Valfloriana from LH to LL and viceversa. Also, since this feature is a proportion that goes from $0.10$ to $0.24$, many municipalities overlap or assume the same value (columns of dots). Nevertheless, some outliers are noticeable, represented with a different style and their label. 
+
+As stated forehead, the quadrants with the pink line and its confidence interval shows the municipalities with similar proportion of students population over the total one (i.e. positive spatial autocorrelation). An example is the relationship between Novaledo and Vignola-Falesina, which are usually in the same HH quadrant, have a high proportion of students and they are close, geographically talking. On the opposite side, Cinte Tesino and Castello Tesino show a low value for students over the population.
+
+On the other hand, municipalities on the remaining quadrants, have dissimilar values if they belong to opposite quadrants. For example, Fierozzo and Frassilongo share a boundary, but their proportion of students is $0.22$ and $0.15$ respectively, enhancing a big dissimilarity between these two municipalities. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%"}
+library(knitr)
+myimages<-list.files("../viz/moran_scatterplot", pattern = "students_pop_", full.names = TRUE)
+include_graphics(myimages)
+```
+
+This chunk shows how many municipalities belong to a specific quadrant. It seems like only 60 over 166 municipalities have a spatial autocorrelation.
+
+```{r dpi=300, fig.align="center"}
+# PLOTTING REGIONS OF INFLUENCE ABOUT STUDENTS OVER POPULATION UNDER 20
+color_mapping = list("LL" = "#FEDB71",
+                     "LH" = "#F6Bf70",
+                     "HL" = "#E6866E",
+                     "HH" = "#E0716E",
+                     "None" = "white")
+hotspot <- as.numeric(row.names(as.data.frame(summary(mps[1][[1]]))))
+tn$Pop_stud.P = na.zero(tn$Pop_stud.P)
+tn$wx <- lag.listw(dnb12.list, tn$Pop_stud.P)
+tn$quadrant <- rep("None", length(tn$Pop_stud.P))
+for(i in 1:length(hotspot))  {
+  if (tn$Pop_stud.P[hotspot[i]]>mean(tn$Pop_stud.P) & tn$wx[hotspot[i]]> mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "HH" 
+  if (tn$Pop_stud.P[hotspot[i]]>mean(tn$Pop_stud.P) & tn$wx[hotspot[i]]< mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "HL" 
+  if (tn$Pop_stud.P[hotspot[i]]<mean(tn$Pop_stud.P) & tn$wx[hotspot[i]]<mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "LL" 
+  if (tn$Pop_stud.P[hotspot[i]]<mean(tn$Pop_stud.P) & tn$wx[hotspot[i]]>mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "LH" 
+}
+table(tn$quadrant)
+```
+
+In order to better visualize them, the plot is served, showing in white the municipalities with no quadrant and the one inside the Moran's quadrants with a gradient. 
+
+⚠️  It is suggested to open the image in a new window to better read municipalities labels, whose size has been reduced for readability issues. 
+
+```{r dpi=300, fig.align="center", fig.width=11, fig.height=11}
+tn$colours = unlist(color_mapping[tn$quadrant])
+par(mar=c(0,0,1,0))
+plot(tn, col=tn$colours, main="Regions with influence on students over population under 20")
+legend(x=11.38, y=45.95, legend=c("Low-Low", "Low-High", "High-Low", "High-High","None"),
+       fill=unlist(color_mapping), bty="n", cex=0.8)
+text(tn_coords, labels = ifelse(tn$quadrant=="None", "" ,tn@data$Comune), cex=0.5)
+```
+
+
+### Moran's Scatterplot on Mean of students per school
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+mps = list()
+for (w in weights) {
+    mps = append(mps, list(moran.plot(
+        na.zero(tn$Media.st_1), 
+        listw = w[[1]], 
+        labels = tn$Comune)))
+    print(w[[2]])
+}
+par(mfrow = c(4,3))
+i = 1
+plots = list()
+for(mp in mps){
+    xname <- attr(mp, "xname")
+    p = ggplot(mp, aes(x=x, y=wx)) + geom_point(shape=1) + 
+        geom_smooth(formula=y ~ x, method="lm", color = "#EF798A", fill="#EF798A") + 
+        geom_hline(yintercept=mean(mp$wx), lty=2) + 
+        geom_vline(xintercept=mean(mp$x), lty=2) + theme_minimal() + 
+        geom_point(data=mp[mp$is_inf,], aes(x=x, y=wx), shape=9) +
+        geom_text(data=mp[mp$is_inf,], aes(x=x, y=wx, label=labels, vjust=1.5), size=3) +
+        xlab(xname) + ylab(paste0("Spatially lagged ", xname))+
+        labs(title=weights[i][[1]][[2]])
+    plots = append(plots, p)
+    ggsave(p, filename = paste0("class_mean_",weights[i][[1]][[2]],".png"), path = "../viz/moran_scatterplot/", dpi=300)
+    i = i+1
+}
+```
+
+The following grid of images shows the Moran's Scatterplot within all different notions of neighborhoods, considering the mean of students per school As in the previous case, the pink line has a positive slope, whose confidence interval continues to grow by increasing the $x$ value. Still, some differences can be noticed from a neighbourhood to another and some municipalities, like Mezzocorona, Villa Lagarina and San Michele All'Adige, continues to switch from above to below the mean dashed line. 
+
+In HH quadrant, Trento, Rovereto, Mori, Mezzocorona, Avio, Lavis and Ala seem to be the municipalities with more students per school in the majority of plots, but also Brentonico, Giovo and Nago-Torbole, except when considering the critical cut-off neighbourhood. 
+
+On the LH part, communities like Drena (surrounded by Arco, Dro and Cavedine), Fornace (Baselga di Pinè and Civezzano), Ronzo-Chienis, Vallarsa (Ala, Rovereto) and Terragnolo (Rovereto, Folgaria) are those municipalities that have few students (less than 100 per school), but surrounded by municipalities with a lot of them.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%"}
+library(knitr)
+myimages<-list.files("../viz/moran_scatterplot", pattern = "class_mean_", full.names = TRUE)
+include_graphics(myimages)
+```
+
+```{r dpi=300, fig.align="center", fig.width=11, fig.height=11}
+# PLOTTING REGIONS OF INFLUENCE ABOUT MEAN OF STUDENTS PER CLASS
+color_mapping = list("LL" = "#FEDB71",
+                     "LH" = "#F6Bf70",
+                     "HL" = "#E6866E",
+                     "HH" = "#E0716E",
+                     "None" = "white")
+hotspot <- as.numeric(row.names(as.data.frame(summary(mps[1][[1]]))))
+tn$Media.st_1 = na.zero(tn$Media.st_1)
+tn$wx <- lag.listw(dnb12.list, tn$Media.st_1)
+tn$quadrant <- rep("None", length(tn$Media.st_1))
+for(i in 1:length(hotspot))  {
+  if (tn$Media.st_1[hotspot[i]]>mean(tn$Media.st_1) & tn$wx[hotspot[i]]> mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "HH" 
+  if (tn$Media.st_1[hotspot[i]]>mean(tn$Media.st_1) & tn$wx[hotspot[i]]< mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "HL" 
+  if (tn$Media.st_1[hotspot[i]]<mean(tn$Media.st_1) & tn$wx[hotspot[i]]<mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "LL" 
+  if (tn$Media.st_1[hotspot[i]]<mean(tn$Media.st_1) & tn$wx[hotspot[i]]>mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "LH" 
+}
+table(tn$quadrant)
+```
+The map displays the membership of municipalities to each of the quadrant in the Moran's scatterplot, while in white leaving the remaining territories with no quadrant. It is worth noticing the three LL clusters:
+
+* Grigno, Imer, Canal San Bovo, Castello Tesino and Cinte Tesino on the west boundary;
+* Giustino, Carisolo, Caderzone Terme and Bocenago near on the east boundary; 
+* Bresimo, Cis, Caldes and Cavizzana on the top-left;
+
+but also three HH (red) clusters:
+
+* Brentonico, Avio and Ala, on the bottom part of the Province;
+* Dro, Arco and Cavedine;
+* Calliano, Besenello and Aldeno.
+
+```{r dpi=300, fig.align="center", fig.width=11, fig.height=11}
+tn$colours = unlist(color_mapping[tn$quadrant])
+par(mar=c(0,0,1,0))
+plot(tn, col=tn$colours, main="Regions with influence on mean students per class")
+legend(x=11.38, y=45.95, legend=c("Low-Low", "Low-High", "High-Low", "High-High","None"),
+       fill=unlist(color_mapping), bty="n", cex=0.8)
+text(tn_coords, labels = ifelse(tn$quadrant=="None", "" ,tn@data$Comune), cex=0.5)
+```
+
+### Moran's Scatterplot on Students over Population under 20
+
+This last inquiry is due to the great gap discovered in the choropleth map inside the website that shows the proportion of actual students over the total population under 20 years old of every municipality. It seems in fact that some municipalities host more students than those who actually live in that area, leading to the possible conclusion that students may need to move from their city to another to go to school every day. 
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+mps = list()
+for (w in weights) {
+    mps = append(mps, list(moran.plot(
+        na.zero(tn$Stud.Pop_s), 
+        listw = w[[1]], 
+        labels = tn$Comune)))
+    print(w[[2]])
+}
+par(mfrow = c(4,3))
+i = 1
+plots = list()
+for(mp in mps){
+    xname <- attr(mp, "xname")
+    p = ggplot(mp, aes(x=x, y=wx)) + geom_point(shape=1) + 
+        geom_smooth(formula=y ~ x, method="lm", color = "#EF798A", fill="#EF798A") + 
+        geom_hline(yintercept=mean(mp$wx), lty=2) + 
+        geom_vline(xintercept=mean(mp$x), lty=2) + theme_minimal() + 
+        geom_point(data=mp[mp$is_inf,], aes(x=x, y=wx), shape=9) +
+        geom_text(data=mp[mp$is_inf,], aes(x=x, y=wx, label=labels, vjust=1.5), size=3) +
+        xlab(xname) + ylab(paste0("Spatially lagged ", xname))+
+        labs(title=weights[i][[1]][[2]])
+    plots = append(plots, p)
+    ggsave(p, filename = paste0("students_pop_20_",weights[i][[1]][[2]],".png"), path = "../viz/moran_scatterplot/", dpi=300)
+    i = i+1
+}
+```
+
+The remaining grid shows this time a negative trend of the relationship between x and the spatially lagged x, indicating that there are few close municipalities with a high number of students over the young population, but mostly of them share dissimilar values with their neighbours. In fact, this may be due to the problem highlighted before, related to the movement of students across different municipalities to go to school, especially middle, high and professional schools. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%"}
+library(knitr)
+myimages<-list.files("../viz/moran_scatterplot", pattern = "students_pop_20_", full.names = TRUE)
+include_graphics(myimages)
+```
+
+```{r dpi=300, fig.align="center", fig.width=11, fig.height=11}
+# PLOTTING REGIONS OF INFLUENCE ABOUT MEAN OF STUDENTS PER CLASS
+color_mapping = list("LL" = "#FEDB71",
+                     "LH" = "#F6Bf70",
+                     "HL" = "#E6866E",
+                     "HH" = "#E0716E",
+                     "None" = "white")
+hotspot <- as.numeric(row.names(as.data.frame(summary(mps[3][[1]]))))
+tn$Stud.Pop_s = na.zero(tn$Stud.Pop_s)
+tn$wx <- lag.listw(dnb12.list, tn$Stud.Pop_s)
+tn$quadrant <- rep("None", length(tn$Stud.Pop_s))
+for(i in 1:length(hotspot))  {
+  if (tn$Stud.Pop_s[hotspot[i]]>mean(tn$Stud.Pop_s) & tn$wx[hotspot[i]]> mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "HH" 
+  if (tn$Stud.Pop_s[hotspot[i]]>mean(tn$Stud.Pop_s) & tn$wx[hotspot[i]]< mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "HL" 
+  if (tn$Stud.Pop_s[hotspot[i]]<mean(tn$Stud.Pop_s) & tn$wx[hotspot[i]]<mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "LL" 
+  if (tn$Stud.Pop_s[hotspot[i]]<mean(tn$Stud.Pop_s) & tn$wx[hotspot[i]]>mean(tn$wx)) 
+    tn$quadrant[hotspot[i]] <- "LH" 
+}
+
+```
+By assigning a quadrant to each municipality we can easily access to the list of municipalities where students come from other areas or that have the necessity of moving to go to school:
+
+```{r}
+tn[tn$quadrant == "LH",]$Comune
+
+tn[tn$quadrant == "LL",]$Comune
+
+
+```
+
+
+
+```{r dpi=300, fig.align="center", fig.width=11, fig.height=11}
+tn$colours = unlist(color_mapping[tn$quadrant])
+par(mar=c(0,0,1,0))
+plot(tn, col=tn$colours, main="Regions with influence on mean students per class")
+legend(x=11.38, y=45.95, legend=c("Low-Low", "Low-High", "High-Low", "High-High","None"),
+       fill=unlist(color_mapping), bty="n", cex=0.8)
+text(tn_coords, labels = ifelse(tn$quadrant=="None", "" ,tn@data$Comune), cex=0.5)
+```
