@@ -3,19 +3,16 @@ title: "Spatial Regression about Trentino Schools"
 output:
   html_document:
     theme: spacelab
-editor_options: 
-  markdown: 
+  pdf_document: default
+editor_options:
+  markdown:
     wrap: 72
 ---
 
 > *"Everything is related to everything else, but near things are more
 > related than distant things."*
 >
-> `r tufte::quote_footer('--- First law of geography (Tobler 1970)')`[^1]
-
-[^1]: Tobler, Waldo R. 1970. "A Computer Movie Simulating Urban Growth
-    in the Detroit Region." Economic Geography 46 (2): 234--40.
-    <http://www.geog.ucsb.edu/~tobler/publications/pdf_docs/A-Computer-Movie.pdf>.
+> `r tufte::quote_footer('- First law of geography (Tobler 1970)')`^[Tobler, Waldo R. 1970. "A Computer Movie Simulating Urban Growth in the Detroit Region." Economic Geography 46 (2): 234--40. http://www.geog.ucsb.edu/~tobler/publications/pdf_docs/A-Computer-Movie.pdf].
 
 ```{r message=FALSE, warning=FALSE}
 # Libraries
@@ -28,7 +25,9 @@ library(rgeos)
 library(terra)
 library(DT)
 
-colours = colorRampPalette(c('#fedb71','#dd696d'))
+colours_palette = colorRampPalette(c("#fedb71","#FCD471","#facd71",
+                             "#f6bf70","#eea26f","#EA946F",
+                             "#e6866e","#e2786e","#e0716e","#dd696d"))
 ```
 
 ## Reading data
@@ -40,7 +39,7 @@ The necessary data for this type of analysis are:
 -   a shapefile with every single school in the Province of Trento,
     represented as points.
 
-```{r fig.align='center'}
+```{r fig.align='center', message=FALSE, warning=FALSE}
 # Read municipality data
 tn <- readOGR("../data/aggregated_data_per_municipality", encoding="UTF-8")
 # Setting the CRS
@@ -232,10 +231,13 @@ local territory.
 k <- knn2nb(knearneigh(school_coords, k = 1, longlat=T))
 par(mar = c(0,0,0,0))
 plot(tn, border = "grey80", axis = tn, lwd=0.5)
-plot(k, school_coords, lwd=.6, 
+plot(k, school_coords, lwd=5, 
      col=alpha("#F27059",alpha=0.5), 
-     cex = .3, add=TRUE, points=FALSE)
-text(tn_coords, labels = ifelse(tn@data$Comune %in% c("Vermiglio","Rabbi","Malé","Luserna","Lavarone","Predaia"),tn@data$Comune, ""), cex=0.6)
+     cex = .8, add=TRUE, points=FALSE)
+text(tn_coords, labels = ifelse(tn@data$Comune %in% c("Vermiglio","Rabbi",
+                                                      "Malé","Luserna",
+                                                      "Lavarone","Predaia"),
+                                tn@data$Comune, ""), cex=0.6)
 ```
 
 On the other hand, at the extreme opposite, with $k=20$, we obtain the
@@ -247,7 +249,7 @@ of schools. In fact, as can be seen by the length of lines, distances
 between schools tend to increase by moving from the Adige Valley to the
 east and west boundary.
 
-```{r echo=FALSE, fig.align='center', fig.cap="KNN with k=20", fig.pos='h', fig.width=11, fig.height=11}
+```{r echo=FALSE, fig.align='center', fig.cap="KNN with k=20", fig.pos='h', dpi=300, fig.width=11, fig.height=11}
 knitr::include_graphics("../viz/knn/20_parks.png")
 ```
 
@@ -290,12 +292,8 @@ nearest neighbour to each school and the relative distance and then get
 the maximum distance among them.
 
 ```{r warning=FALSE}
-knn1<- knn2nb(knearneigh(school_coords,
-                         k=1,
-                         longlat=T))
-all.linked <- max(unlist(nbdists(knn1,
-                                 school_coords,
-                                 longlat=T))) 
+knn1<- knn2nb(knearneigh(school_coords, k=1, longlat=T))
+all.linked <- max(unlist(nbdists(knn1, school_coords, longlat=T))) 
 all.linked
 ```
 
@@ -316,12 +314,8 @@ ggplot()+
 ```
 
 ```{r}
-knn1<- knn2nb(knearneigh(tn_coords,
-                         k=1,
-                         longlat=T))
-all.linked <- max(unlist(nbdists(knn1,
-                                 tn_coords,
-                                 longlat=T))) 
+knn1<- knn2nb(knearneigh(tn_coords,k=1,longlat=T))
+all.linked <- max(unlist(nbdists(knn1,tn_coords,longlat=T))) 
 all.linked
 ```
 
@@ -523,9 +517,12 @@ Trentino, therefore some data might be missing. In these cases, the
 plots below will show the respective area in white*.
 
 ```{r dpi=300, fig.align="center", fig.width=20, fig.height=30}
-cols = list(tn$Scuole,tn$Studenti, tn$Classi, tn$Media_stud_scuola, tn$Pop_under_20_Pop_tot, tn$Stud_Pop_under_20, tn$Media_stud_classe)
-titles = c("Schools","Students","Classes","Mean of students per school","Population under 20 over Total Population", "Students over Population under 20", "Mean students per class")
-colours <- c("#fedb71","#FCD471","#facd71","#f6bf70","#eea26f","#EA946F","#e6866e","#e2786e","#e0716e","#dd696d")
+cols = list(tn$Scuole,tn$Studenti, tn$Classi, tn$Media_stud_scuola,
+            tn$Pop_under_20_Pop_tot, tn$Stud_Pop_under_20, tn$Media_stud_classe)
+titles = c("Schools","Students","Classes","Mean of students per school",
+           "Population under 20 over Total Population", 
+           "Students over Population under 20", "Mean students per class")
+colours <- colours_palette(10)
 
 na.ignore = function(x){
   x[is.na(x)] <- -1
@@ -660,10 +657,10 @@ autocorrelation in the residuals of a linear regression model.[^5]
 Let's start by trying to model the mean students per class with all the
 remaining features we have explored. The summary shows that all
 predictors are significant, except for the population under 20 over
-total population.
+total population and the number of students.
 
 ```{r}
-LinearMean <- lm(Media_stud_classe ~ Stud_Pop_under_20+Scuole+Classi+Media_stud_scuola+Pop_under_20_Pop_tot+Studenti, tn)
+LinearMean <- lm(Media_stud_classe ~ Stud_Pop_under_20+Scuole+Classi+Media_stud_scuola+Pop_under_20_Pop_tot+Studenti, tn, na.action = na.ignore)
 summary(LinearMean)
 ```
 
@@ -682,13 +679,14 @@ hint about the presence of spatial dependence in the residuals. In fact,
 some similarities may be found in the east part, near the border and
 within the Adamello Brenta Park.
 
-```{r fig.align="center"}
+```{r fig.align="center", dpi=300, fig.width=10,fig.height=10}
 par(mar=c(0,0,1,0))
 studres <- rstudent(LinearMean)
 resdistr <- round(quantile(studres, seq(0,1,0.25)), digits=3)
-colours_5 <- colours(5)
+colours_5 <- colours_palette(5)
 plot(tn, col=colours_5[findInterval(studres, resdistr, all.inside=TRUE)],
-     main = "Residuals quantiles in Trentino")
+     main = "Residuals quantiles in Trentino",
+     border="grey20")
 ```
 
 The command that allows to perform the Moran's I test in the OLS
@@ -1516,7 +1514,7 @@ tn$colpval[pval<=0.01 & pval>0.001] <- gray(0.7)
 tn$colpval[pval<=0.001 & pval>0.0001] <- gray(0.4)
 tn$colpval[pval<=0.0001] <- "black"
 
-plot(tn, col=colpval)
+plot(tn, col=colpval, border="grey30")
 legend(x=11.5, y=45.9, legend=c("Not significant", 
        "p-value = 0.05", "p-value = 0.01", "p-value = 0.001", 
        "p-value = 0.0001"), fill=pvalue_colors, bty="n", cex=1)
@@ -1560,18 +1558,12 @@ Spatial spillovers can be:
     neighbours to the neighbouring units, neighbours to the neighbours,
     and so on, thus generating endogenous interaction and feedback
     effects. Examples of these specifications are the Spatial Durbin
-    Model (SDM) and the Spatial AutoRegressive model (SAR)[^8].
-
-[^8]: LeSage, J. 2014. "What Regional Scientists Need to Know About
-    Spatial Econometrics." Review of Regional Studies 44 (1): 13--32.
+    Model (SDM) and the Spatial AutoRegressive model (SAR)^[LeSage, J. 2014. "What Regional Scientists Need to Know About
+    Spatial Econometrics." Review of Regional Studies 44 (1): 13--32].
 
 </aside>
 
-Let's start with the SDM model. The `lagsarlm()`[^9] function provides
-Maximum likelihood estimation of spatial simultaneous autoregressive lag
-and spatial Durbin (mixed) models of the form:
-
-[^9]: <https://cran.r-project.org/web/packages/spatialreg/spatialreg.pdf>
+Let's start with the SDM model. The `lagsarlm()`^[lagsarlm documentation, https://cran.r-project.org/web/packages/spatialreg/spatialreg.pdf] function provides Maximum likelihood estimation of spatial simultaneous autoregressive lag and spatial Durbin (mixed) models of the form:
 
 $$
 Y = \rho Wy+X\beta+\epsilon
@@ -1587,7 +1579,8 @@ significance is shown by the SDM.
 library(spatialreg)
 
 # Estimate the SDM model using the Maximum likelihood estimator
-SDM <- lagsarlm(Pop_under_20_Pop_tot ~ Stud_Pop_under_20 + Scuole + Media_stud_scuola + Studenti, tn, listw=dnb16.list,
+SDM <- lagsarlm(Pop_under_20_Pop_tot ~ Stud_Pop_under_20 + Scuole +
+                  Media_stud_scuola + Studenti, tn, listw=dnb16.list,
                 type="mixed", na.action = na.ignore)
 summary(SDM)
 ```
@@ -1626,27 +1619,15 @@ a low high-value, demonstrating the significance of this estimation.
 
 ```{r}
 # Estimate the LDM model using the OLS estimator
-LDM <- lmSLX(Pop_under_20_Pop_tot ~ Stud_Pop_under_20 + Scuole + Media_stud_scuola + Studenti,tn, listw=dnb16.list, na.action = na.ignore)
+LDM <- lmSLX(Pop_under_20_Pop_tot ~ Stud_Pop_under_20 + Scuole +
+               Media_stud_scuola + Studenti,tn, listw=dnb16.list, na.action = na.ignore)
 summary(LDM)
 ```
 
-The calculation of impacts for spatial lag and spatial Durbin models is
-needed in order to interpret the regression coefficients correctly,
-because of the spillovers between the terms in these data generation
-processes^[spdep\ Documentation,\ <https://www.rdocumentation.org/packages/spdep/versions/1.0-2/topics/impacts>]^[LeSage
-J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press,
-Boca Raton, pp. 33--42, 114--115; LeSage J and MM Fischer (2008) Spatial
-growth regressions: model specification, estimation and interpretation.
-Spatial Economic Analysis 3 (3), pp. 275--304][^10]. The method
-`impacts` returns the average direct, indirect and total impacts for the
-variables in the model, for the variables themselves in the spatial lag
-model case, for the variables and their spatial lags in the spatial
-Durbin (mixed) model case.
+The calculation of impacts for spatial lag and spatial Durbin models is needed in order to interpret the regression coefficients correctly,
+because of the spillovers between the terms in these data generation processes^[spdep Documentation, https://www.rdocumentation.org/packages/spdep/versions/1.0-2/topics/impacts]^[LeSage J and RK Pace (2009) Introduction to Spatial Econometrics. CRC Press, Boca Raton, pp. 33--42, 114--115; LeSage J and MM Fischer (2008) Spatial growth regressions: model specification, estimation and interpretation. Spatial Economic Analysis 3 (3), pp. 275--304]. 
 
-[^10]: Roger Bivand, Gianfranco Piras (2015). Comparing Implementations
-    of Estimation Methods for Spatial Econometrics. Journal of
-    Statistical Software, 63(18), 1-36.
-    <https://www.jstatsoft.org/v63/i18/>
+The method `impacts` returns the average direct, indirect and total impacts for the variables in the model, for the variables themselves in the spatial lag model case, for the variables and their spatial lags in the spatial Durbin (mixed) model case^[Roger Bivand, Gianfranco Piras (2015). Comparing Implementations of Estimation Methods for Spatial Econometrics. Journal of Statistical Software, 63(18), 1-36. https://www.jstatsoft.org/v63/i18/]. The indirect impact represents a proper measure of (global) spatial spillover. Indeed, it expresses, on average, how a change in $x$ reverberates on $y$ all over the sample.
 
 ```{r eval=FALSE, include=FALSE}
 impSAR <- impacts(SAR, listw=dnb16.list, R=100)
@@ -1673,7 +1654,8 @@ According to this diagnostic, no model has been found significant by
 looking at the p-value.
 
 ```{r}
-OLSmodel <- lm(Pop_under_20_Pop_tot ~ Stud_Pop_under_20 + Scuole + Media_stud_scuola + Studenti, data = tn, na.action = na.ignore)
+OLSmodel <- lm(Pop_under_20_Pop_tot ~ Stud_Pop_under_20 + Scuole + 
+                 Media_stud_scuola + Studenti, data = tn, na.action = na.ignore)
 natOLSlmTests <- lm.LMtests(OLSmodel, dnb16.list, 
                     test=c("LMerr", "LMlag", "RLMerr", "RLMlag"))
 summary(natOLSlmTests)
@@ -1694,33 +1676,40 @@ optimal model).
 Starting from SDM, all predictors seem to gain high relevance given the low p-value, while their lagged values are relevant only for the mean students per school and slightly for the number of classes. The overall p-value of the model is below $0.05$ and therefore considered statistically significant.
 
 ```{r}
-SDM <- lagsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + Classi + Media_stud_scuola + Studenti, tn, listw=dnb16.list,
+SDM <- lagsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + Classi + 
+                  Media_stud_scuola + Studenti, tn, listw=dnb16.list,
                 type="mixed", na.action = na.ignore)
 summary(SDM)
 ```
 In SAR case instead, despite all predictors seem to have high relevance, the spatial autoregressive parameter $\rho$ (Rho) is not significant due to high p-value on both the asymptotic t-test and Likelihood ratio test, but the LM test for residual autocorrelation has low p-value, indicating the presence of spatial autocorrelation in the residuals. 
 
 ```{r}
-SAR <- lagsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + Classi + Media_stud_scuola + Studenti, tn, listw=dnb16.list, na.action = na.ignore)
+SAR <- lagsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + Classi + 
+                  Media_stud_scuola + Studenti, tn, listw=dnb16.list, na.action = na.ignore)
 summary(SAR)
 ```
 In case of local spillover specifications, all predictors are relevant, but not their lagged version. The $\lambda$ (Lambda) estimator is highly significant due to low p-value on both Likelihood ratio and asymptotic t-tests.
 
 ```{r}
-SDEM <- errorsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + Classi + Media_stud_scuola + Studenti, tn, listw=dnb16.list,
+SDEM <- errorsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + 
+                     Classi + Media_stud_scuola + Studenti, tn, listw=dnb16.list,
                    etype = "emixed", na.action = na.ignore)
 summary(SDEM)
 ```
 In case of SEM instead, the estimator is not statistically significant in both tests due to p-value around $0.3$. 
 ```{r}
-SEM <- errorsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + Classi + Media_stud_scuola + Studenti, tn, listw=dnb16.list, na.action = na.ignore)
+SEM <- errorsarlm(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + 
+                    Classi + Media_stud_scuola + Studenti, tn, listw=dnb16.list, 
+                  na.action = na.ignore)
 summary(SEM)
 ```
 
 Also for LDM predictors are relevant, except for their lagged values. The p-value is below the $0.05$ threshold, concluding the significance of this model. 
 
 ```{r}
-LDM <- lmSLX(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + Classi + Media_stud_scuola + Studenti,tn, listw=dnb16.list, na.action = na.ignore)
+LDM <- lmSLX(Media_stud_classe ~ Stud_Pop_under_20 + Scuole + 
+               Classi + Media_stud_scuola + Studenti,tn, listw=dnb16.list, 
+             na.action = na.ignore)
 summary(LDM)
 ```
 
@@ -1738,6 +1727,7 @@ summary(impSAR, zstats=TRUE, short=TRUE)
 ```
 
 In this second case, the p-value is higher than before, but still implying significance mainly for students over population under $20$ (increase), number of schools (increase) and number of classes (decrease). 
+
 ```{r}
 #For the SD specification:
 impSDM <- impacts(SDM, listw=dnb16.list, R=100)
@@ -1755,18 +1745,20 @@ natOLSlmTests <- lm.LMtests(OLSmodel, dnb16.list,
 summary(natOLSlmTests)
 ```
 
-The selection strategy of the above mentioned models proposed by Elhorst (2010) is to:
+According to Elhorst (2010)^[Elhorst, J. P. 2010. “Applied Spatial Econometrics: Raising the Bar.” Spatial Economic Analysis 5 (1). Routledge: 9–28.], a valid comparison between two models can be made through an inferential strategy. The best specification under the ML estimation, we should:
 
-1. Estimate the OLS model and test (with the LM test) whether the SL or the SEM is more appropriate to describe the data;
-2. If the OLS model is rejected in favour of the SL, the SEM or in favour of both models, then the SDM should be estimated;
+1. Estimate the OLS model and test (with the LM test) whether the SAR or the SEM is more appropriate to describe the data;
+2. If the OLS model is rejected in favour of SAR, the SEM or in favour of both models, then the SDM should be estimated;
 3. Likelihood ratio (LR) tests can subsequently be used to test whether:
 
-    * the SDM can be simplified to the SLM, 
-    * whether it can be simplified to the SEM.
+    * the SDM can be simplified to SAR, 
+    * whether SDM can be simplified to the SEM.
     
-If both hypotheses are rejected, then the SDM best describes the data. If the hypothesis i) cannot be rejected, then the SLM best describes the data, provided that the (robust) LM tests also pointed to the SLM
+If both hypotheses are rejected, then the SDM best describes the data. If the hypothesis i) cannot be rejected, then the SAR best describes the data.
 
 If the hypothesis ii) cannot be rejected, then the SEM best describes the data, provided that the (robust) LM tests also pointed to the SEM. We can perform LR tests of restrictions on the parameters of spatial models using the function `anova()`.
+
+With the likelihood ratio test, we can see if the SAR can be simplified by the SDM, which is true due to the low p-value. On the other hand, performing the same test on SDM and SEM makes us come to the conclusion that SDM cannot be simplified by SEM, because of the p-value above $0.05$ threshold. 
 
 ```{r}
 # Test hypothesis i)
@@ -1774,7 +1766,6 @@ anova(SAR, SDM)
 
 # Test hypothesis ii)
 anova(SDM, SEM)
-
-# 
-anova(SDEM, SEM)
 ```
+
+Since hypothesis i) cannot be rejected, SAR is selected as specification. 
