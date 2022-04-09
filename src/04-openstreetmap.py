@@ -393,7 +393,7 @@ def create_school_pois_map(p, pois, icons):
     # Adding layers
     folium.TileLayer("cartodbpositron", name="Light").add_to(m)
     folium.TileLayer("CartoDB dark_matter", name="Dark").add_to(m)
-    folium.TileLayer('openstreetmap', name="OpenStreetMap").add_to(m)
+    folium.TileLayer('OpenStreetMap', name="OpenStreetMap").add_to(m)
     folium.LayerControl(collapsed=False).add_to(m)
 
     return m
@@ -401,7 +401,7 @@ def create_school_pois_map(p, pois, icons):
 
 # %%
 # Generate map for all schools
-for i in tqdm(range(343, len(schools))):
+for i in tqdm(range(len(schools))):
     create_school_pois_map(schools.iloc[i], pois, icons).save(
         "../viz/pois/"+str(i)+".html")
 
