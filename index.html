@@ -13,11 +13,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand" rel="stylesheet">
 
     <!-- Particles -->
-    <link rel="stylesheet" href="particles.css"> -->
+    <link rel="stylesheet" href="particles.css">
     <link rel="javascript" href="particles.js">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="customized_style.css">
 
     <!-- Font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -62,48 +64,45 @@
     </script>
 
     <!-- Navbar -->
-    <div class="w3-top" id="navbar">
+    <div class="top" id="navbar">
         <a href="#">Home</a>
         <a href="#searchschool">Cerca
             Scuola</a>
-        <a href="#density">School
-            density</a>
-        <a href="#stats">Some
-            statistics</a>
-        <a href="#openstreetmap">Places
-            nearby</a>
-        <a href="#networking">School
-            Networking</a>
+        <a href="#density">Studenti</a>
+        <a href="#stats">Networking</a>
+        <a href="#openstreetmap">Nei dintorni</a>
+        <a href="#comunity">Comunità di valle</a>
         <a href="javascript:void(0);" class="icon" onclick="resize_navbar()">
             <i class="fa fa-bars"></i>
         </a>
     </div>
 
-
     <!-- Header -->
-    <header class="center container w3-white-text" style="padding:128px 16px; position:relative;">
-        <h1 class="w3-margin-top jumbo">Scuole in Trentino</h1>
-        <h4 class="w3-xlarge">Progetto di Geospatial Analysis</h4>
+    <header>
+        <div class='panel'>
+            <h1>Scuole in Trentino</h1>
+            <h4>Progetto di Geospatial Analysis & Representationn</h4>
+        </div>
         <div id="particles-js"></div>
         <script src="particles.min.js"></script>
         <script src="particles.js"></script>
-
     </header>
     <section>
         <!-- First Grid -->
-        <div id="searchschool" class="w3-row-padding white w3-padding-64 w3-container">
+        <div id="searchschool" class="row-padding white container">
             <div class="content">
-                <div class="right">
-                    <h1>Cerca la tua scuola</h1>
-                    <p class="w3-text-grey">
-                        La mappa di seguito presentata mostra il Trentino corredato da alcuni marker, che rappresentano
-                        la singola scuola. Se il livello di zoom non è dettagliato, le scuole vengono raggruppate: tante
-                        più scuole sono raggruppate, tanto più scuro è il cerchio, contenente il numero di scuole che
-                        contiene. Aumentando il livello di zoom, è possibile visualizzare il numero di scuole in un'area
-                        specifica.
+                <div class="left">
+                    <h1>Le scuole in Trentino</h1>
+                    <h4>Quante scuole ci sono in Trentino?</h4>
+                    <p class="text-grey">
+                        La provincia di Trento, illustrata nella mappa di seguito, presenta <b>724 scuole</b>. Ognuna di
+                        esse ha un suo marker sulla mappa, che viene aggregato ad altri al diminuire del livello di
+                        zoom. Tante più scuole sono raggruppate, tanto più scuro è il cerchio, che conteggia il numero
+                        di scuole che contiene.
                         <br>
-                        Cliccando sul marker della singola scuola, è possibile visualizzarne i dettagli, come nome,
-                        Istituto, informazioni di contatto e indirizzo. Nel caso si volesse cercare una scuola
+                        Cliccando sul singolo marker, è possibile visualizzare i dettagli della scuola, come nome,
+                        istituto comprensivo, informazioni di contatto e indirizzo. Nel caso si volesse cercare una
+                        scuola
                         specifica, è disponibile l'opzione di ricerca in base al nome della scuola (singola unità
                         didattica).
                         <br>
@@ -116,54 +115,100 @@
             </div>
             <div class="content">
                 <h1>Le scuole trentine in proporzioni</h1>
-                <p style="float:left;">
-                    Il grafico a fianco mostra la proporzione di scuole statali e paritarie nel territorio trentino. In
-                    particolare, cliccando sulla singola categoria, è possibile approfondire la proporzione, per ognuno
-                    dei due tipi di gestione scolastica, dei vari gradi di scuola: scuola dell'infanzia, primaria,
-                    secondaria di primo e di secondo grado, formazione professionale ed educazione per adulti.
+                <h4>Scuole statali e paritarie</h4>
+                <p class="text-grey">
+                    Dal grafico sottostante emerge come le scuole statali (<b>70%</b>) prevalgano sulle paritarie
+                    (<b>30%</b>). Un'ulteriore classificazione fornita dal grafico è quella basata sul grado della
+                    scuola: infanzia, primaria, secondaria (di primo e secondo grado), formazione professionale ed
+                    educazione per adulti.
+
+                    <br>
+                    Le <b>scuole statali</b> sono circa equamente suddivise tra scuola dell'infanzia, secondaria di
+                    primo e
+                    secondo grado, mentre le scuole primarie costituiscono il 40% delle scuole statali. Formazione
+                    professionale ed educazione per adulti risultano essere una minoranza del 4% (totale).
+                    <br>
+                    D'altra parte, le scuole d'infanzia (72%) costituiscono la categoria preponderante tra le <b>scuole
+                        paritarie</b>. Contrariamente alle scuole statali,le primarie e le secondarie di primo grado
+                    sono in minoranza (4% ciascuno) rispetto alle secondarie di secondo grado (8%). Inoltre, oltre la
+                    metà delle scuole dedicate alla formazione professionale è paritaria (26 su 44).
                 </p>
-                <iframe class="noshadow" src="viz/sunburst_schools.html" style="float: right;"></iframe>
+                <iframe class="noshadow" src="viz/sunburst_schools.html"></iframe>
             </div>
         </div>
 
         <!-- Second Grid -->
-        <div id="density" class="w3-row-padding light-grey w3-padding-64 w3-container">
+        <div id="density" class="row-padding light-grey container">
             <div class="content">
                 <div class="content">
-                    <div class="right">
+                    <div class="left">
                         <h1>Studenti, Scuole e Popolazione</h1>
-                        <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitation
-                            ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-                            laborum
-                            consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-                            aliqua.
-                            Ut
-                            enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <h4>Quanti studenti ci sono in ogni comune?</h4>
+                        <p class="text-grey">
+                            Dopo aver considerato il numero e la distribuzione delle scuole sul territorio, è possibile
+                            concentrarsi sugli <b>studenti</b> e sul rapporto con la <b>popolazione</b> locale.
+                            <br>
+                            <i>Nota bene: Il numero degli studenti considerato per ogni comune comprende le scuole
+                                primarie, secondarie e di formazione professionale, con esclusione delle scuole
+                                d'infanzia, di cui non è possibile ricavare i dati.</i>
+                        </p>
+                        <div>
+                            <iframe src="viz/students_population.html"></iframe>
+                        </div>
+                        <p class="text-grey">
+                            Alcuni comuni non detengono dati sul <b>numero di studenti</b> (per esempio Valdaone e
+                            Imer), per tale motivo sono interamente in bianco. La maggioranza degli studenti si
+                            concentra presso <b>Trento</b> (circa 20.000) e <b>Rovereto</b> (circa 10.000), i comuni più
+                            popolati del Trentino. Essendovi pochi comuni con alta densità di popolazione, la mappa su
+                            Studenti, Popolazione e Scuole mostrano alte concentrazioni sulle aree maggiormente popolate
+                            (Trento, Rovereto, Riva del Garda, Cles, Arco, Pergine Valsugana),
+                        </p>
+                        <h4>Gli studenti in rapporto alla popolazione</h4>
+                        <p class="text-grey">
+                            La mappa su <b>Studenti/Popolazione</b> illustra il rapporto tra la popolazione compresa tra
+                            i 6 e i 20 anni (estremi compresi) e la popolazione totale, assumendo che tutti gli studenti
+                            (dalla primaria alla professionale) siano compresi all'interno di questa fascia d'età. I
+                            comuni con il rapporto più alto di popolazione studentesca sono Porte di Rendena, Dro,
+                            Comano Terme e Novaledo (19%), mentre quelli con il rapporto più basso sono Palù del Fersina
+                            (8%), Cinte Tesino (9%), Valfloriana, Castello Tesino e Sagron Mis (10%).
+                            <br>
+                            Il rapporto tra il numero di studenti e popolazione studentesca illustra la proporzione di
+                            studenti che frequentano una scuola all'interno del comune sulla popolazione compresa tra i
+                            6 e i 20 anni d'età. Risulta particolarmente utile per mettere in evidenza quei comuni con
+                            situazioni duali: da un lato comuni i cui studenti sono al di sotto della popolazione 6-20
+                            residente (come <b>Peio</b>, <b>Vermiglio</b>, <b>Rabbi</b>, <b>Rumo</b>, <b>Ville di Fiemme</b>,<b>Vallarsa</b>, <b>Trambileno</b>, <b>Terragnolo</b>); d'altra parte, vi sono comuni ove il numero di studenti supera di gran lunga la popolazione giovanile residente (come <b>Tione di Trento</b>, <b>Ossana</b> e
+                            <b>Cles</b>).
+                            Questa situazione potrebbe implicare che molti studenti debbano spostarsi da un comune
+                            all'altro
+                            per andare a scuola.
+                            <br>
+                            Infine, dopo aver esplorato il numero di scuole e di studenti per comune, <b>Media studenti
+                                per
+                                scuola</b> mira a fornire una visione complessiva della distribuzione di studenti per
+                            scuola
+                            all'interno di ogni comune. Come riportato precedentemente, i comuni più popolati hanno una
+                            media di studenti più alta, raggiungendo circa i <b>200 studenti</b> (Trento, Rovereto,
+                            Mori,
+                            Mezzocorona, Riva del Garda, Arco, Levico Terme), mentre i comuni rimanenti (in giallo e
+                            arancione) hanno una media di studenti per scuola al di sotto di <b>100</b>.
+                        </p>
                     </div>
-                    <div>
-                        <iframe src="viz/students_population.html"></iframe>
-                    </div>
+                    
                 </div>
             </div>
         </div>
 
         <!-- Third Grid -->
-        <div id="stats" class="w3-row-padding white w3-padding-64 w3-container">
+        <div id="stats" class="row-padding white container">
             <div class="content">
                 <h1>Networking</h1>
                 <h4>Quante strade puoi raggiungere?</h4>
-                <p>
-                    Questa sezione è dedicata agli spostamenti a piedi, in bici e in auto. Scegliendo la propria scuola
+                <p class="text-grey">
+                    Questa sezione è dedicata agli spostamenti a piedi, in bici e in auto. Scegliendo una specifica scuola
                     e il mezzo di trasporto, verrà caricata una mappa che mostra quali strade possano essere raggiunte
-                    in 5, 10, 15 e 20 minuti, la cui differenza in termini di tempo viene espressa dall'intensità del
-                    colore della strada.
+                    in <b>5</b>, <b>10</b>, <b>15</b> e <b>20</b> minuti, la cui differenza in termini di tempo viene espressa dall'intensità del colore della strada.
                 </p>
-                <select class="choose-school" onchange="update_route_isochrone()" value=0
+                <select class="choose-school dropdown" onchange="update_route_isochrone()" value=0
                     placeholder="Cerca la tua scuola..." id="school-select"></select>
                 <form id="choose-transport" onchange="update_route_isochrone()" value="walk">
                     <label>
@@ -187,34 +232,28 @@
         </div>
 
         <!-- Fourth Grid -->
-        <div id="openstreetmap" class="w3-row-padding light-grey w3-padding-64 w3-container">
+        <div id="openstreetmap" class="row-padding light-grey w3-padding-64
+         container">
             <div class="content">
-                <div class="w3-twothird">
-                    <h1>Punti di interesse</h1>
-                    <select id="poi-select" class="choose-school" onchange="update_pois_path()" value=0
-                        placeholder="Cerca la tua scuola..."></select>
-                    <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat.</p>
-                </div>
+                <h1>Punti di interesse</h1>
+                <h4>Categorie di luoghi accessibili attorno alle scuole</h4>
+                <select id="poi-select" class="choose-school dropdown" onchange="update_pois_path()" value=0 placeholder="Cerca la tua scuola...">
+                </select>
+                <p class="text-grey"></p>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
             </div>
             <div class="content">
+                <h4>Confronto con la media del comune e della provincia</h4>
                 <iframe id="pois-barplot" src="viz/barplot/0.html"></iframe>
             </div>
         </div>
 
         <!-- Fifth Grid -->
-        <div id="networking" class="w3-row-padding white w3-padding-64 w3-container">
+        <div id="knn" class="row-padding white container">
             <div class="content">
                 <div>
                     <h1>Modelli di regressione spaziale</h1>
-                    <p class="w3-text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                    <p class="text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                         tempor
                         incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                         ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
@@ -235,7 +274,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="w3-container w3-padding-64 center w3-opacity">
+    <footer class="container center w3-opacity">
         <div class="w3-xlarge">
             <a href="https://github.com/AuroraArctic/TrentinoSchools" target="_blank"><i
                     class="fa fa-github w3-hover-opacity"></i></a>
@@ -269,10 +308,10 @@
 
         function resize_navbar() {
             var x = document.getElementById("navbar");
-            if (x.className === "w3-top") {
+            if (x.className === "top") {
                 x.className += " responsive";
             } else {
-                x.className = "w3-top";
+                x.className = "top";
             }
         }
     </script>
