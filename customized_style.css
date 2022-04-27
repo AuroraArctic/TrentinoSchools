@@ -83,7 +83,7 @@ form i {
     font-size: 30px;
     text-align: center;
     text-align: center;
-    width: 35px;
+    width: 30px;
     border-radius: 50px;
     border: none;
     box-shadow: 0 0 5px #888;
@@ -94,16 +94,18 @@ form i {
 }
 
 form i:hover {
-    background-color: #ccc;
+    background-color: rgb(222, 221, 221);
 }
 
-form i:checked {
+#choose-transport input:checked {
     background-color: #F27059;
 }
 
 [type=range] {
     -webkit-appearance: none;
     width: 100%;
+    max-width: 390px;
+    left: 50%;
     height: 15px;
     border-radius: 5px;
     background: #d3d3d3;
@@ -125,6 +127,7 @@ form i:checked {
     border-radius: 50%;
     background: #F27059;
     cursor: pointer;
+    border-color: #F27059;
 }
 
 [type=range]::-moz-range-thumb {
@@ -133,6 +136,7 @@ form i:checked {
     border-radius: 50%;
     background: #F27059;
     cursor: pointer;
+    border-color: #F27059;
 }
 
 .main-color {
@@ -150,49 +154,41 @@ br {
     margin: 10px 0;
 }
 
-/* SELECT: DROPDOWN MENU */
-select {
-    padding: 9px 0;
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #ccc
-}
-
-.dropdown-click,
-.dropdown-hover {
-    position: relative;
-    display: inline-block;
-    cursor: pointer
-}
-
-.dropdown-hover:hover .dropdown-content {
-    display: block
-}
-
-.dropdown-hover:first-child,
-.dropdown-click:hover {
-    background-color: #ccc;
-    color: #000
-}
-
-.dropdown-hover:hover>.w3-button:first-child,
-.dropdown-click:hover>.w3-button:first-child {
-    background-color: #ccc;
-    color: #000
-}
-
-.dropdown-content {
-    cursor: auto;
-    color: #000;
-    background-color: #fff;
-    display: none;
-    position: absolute;
-    min-width: 160px;
+.no-space br{
     margin: 0;
-    padding: 0;
-    z-index: 1
 }
 
 #navbar {
     z-index: 100;
+}
+
+/* SELECT BOX */
+select option:checked,
+select option:hover {
+    box-shadow: 0 0 10px 100px #000 inset;
+}
+
+select {
+    max-width: 390px;
+}
+
+.no-shadow {
+    width: 100%;
+    height: 500px;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0 10px 0;
+    box-shadow: none;
+}
+
+#fill-with-k, p span {
+    font-family: "Playfair Display", serif;
+}
+
+.more-padding {
+    padding-bottom: 200px;
+}
+
+footer i{
+    size:100px;
 }

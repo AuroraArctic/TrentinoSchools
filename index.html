@@ -52,7 +52,7 @@
         }
         function update_route_isochrone() {
             transport = $("input[name='choose-transport']:checked").val();
-            console.log(transport);
+            // console.log(transport);
             school = $("#school-select").val();
             $("#route-isochrone").attr("src", "viz/isochrones/route/" + transport + "/" + school + ".html");
         }
@@ -60,25 +60,32 @@
         function change_knn() {
             k = $("#choose-knn").val();
             $("#knn").attr("src", "viz/knn/" + k + ".png");
+            // console.log(k);
+            document.getElementById("fill-with-k").innerHTML = "k=" + k;
+        }
+
+        function update_trees() {
+            name = $('#metric-select').val();
+            $("#tree").attr("src", "viz/trees/" + name + ".html");
         }
     </script>
 
     <!-- Navbar -->
     <div class="top" id="navbar">
-        <a href="#">Home</a>
+        <a href="#home">Home</a>
         <a href="#searchschool">Cerca
             Scuola</a>
         <a href="#density">Studenti</a>
         <a href="#stats">Networking</a>
         <a href="#openstreetmap">Nei dintorni</a>
-        <a href="#comunity">Comunità di valle</a>
+        <a href="#community">Comunità di valle</a>
         <a href="javascript:void(0);" class="icon" onclick="resize_navbar()">
             <i class="fa fa-bars"></i>
         </a>
     </div>
 
     <!-- Header -->
-    <header>
+    <header id="home">
         <div class='panel'>
             <h1>Scuole in Trentino</h1>
             <h4>Progetto di Geospatial Analysis & Representationn</h4>
@@ -89,7 +96,7 @@
     </header>
     <section>
         <!-- First Grid -->
-        <div id="searchschool" class="row-padding white container">
+        <div id="searchschool" class="row-padding light-gray container">
             <div class="content">
                 <div class="left">
                     <h1>Le scuole in Trentino</h1>
@@ -113,6 +120,8 @@
                 </div>
                 <iframe src="viz/schools_cluster.html"></iframe>
             </div>
+        </div>
+        <div class="row-padding white container">
             <div class="content">
                 <h1>Le scuole trentine in proporzioni</h1>
                 <h4>Scuole statali e paritarie</h4>
@@ -166,7 +175,7 @@
                         <h4>Gli studenti in rapporto alla popolazione</h4>
                         <p class="text-grey">
                             La mappa su <b>Studenti/Popolazione</b> illustra il rapporto tra la popolazione compresa tra
-                            i 6 e i 20 anni (estremi compresi) e la popolazione totale, assumendo che tutti gli studenti
+                            i 5 e i 20 anni (estremi compresi) e la popolazione totale, assumendo che tutti gli studenti
                             (dalla primaria alla professionale) siano compresi all'interno di questa fascia d'età. I
                             comuni con il rapporto più alto di popolazione studentesca sono Porte di Rendena, Dro,
                             Comano Terme e Novaledo (19%), mentre quelli con il rapporto più basso sono Palù del Fersina
@@ -174,9 +183,12 @@
                             <br>
                             Il rapporto tra il numero di studenti e popolazione studentesca illustra la proporzione di
                             studenti che frequentano una scuola all'interno del comune sulla popolazione compresa tra i
-                            6 e i 20 anni d'età. Risulta particolarmente utile per mettere in evidenza quei comuni con
+                            5 e i 20 anni d'età. Risulta particolarmente utile per mettere in evidenza quei comuni con
                             situazioni duali: da un lato comuni i cui studenti sono al di sotto della popolazione 6-20
-                            residente (come <b>Peio</b>, <b>Vermiglio</b>, <b>Rabbi</b>, <b>Rumo</b>, <b>Ville di Fiemme</b>,<b>Vallarsa</b>, <b>Trambileno</b>, <b>Terragnolo</b>); d'altra parte, vi sono comuni ove il numero di studenti supera di gran lunga la popolazione giovanile residente (come <b>Tione di Trento</b>, <b>Ossana</b> e
+                            residente (come <b>Peio</b>, <b>Vermiglio</b>, <b>Rabbi</b>, <b>Rumo</b>, <b>Ville di
+                                Fiemme</b>,<b>Vallarsa</b>, <b>Trambileno</b>, <b>Terragnolo</b>); d'altra parte, vi
+                            sono comuni ove il numero di studenti supera di gran lunga la popolazione giovanile
+                            residente (come <b>Tione di Trento</b>, <b>Ossana</b> e
                             <b>Cles</b>).
                             Questa situazione potrebbe implicare che molti studenti debbano spostarsi da un comune
                             all'altro
@@ -193,7 +205,7 @@
                             arancione) hanno una media di studenti per scuola al di sotto di <b>100</b>.
                         </p>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -204,25 +216,28 @@
                 <h1>Networking</h1>
                 <h4>Quante strade puoi raggiungere?</h4>
                 <p class="text-grey">
-                    Questa sezione è dedicata agli spostamenti a piedi, in bici e in auto. Scegliendo una specifica scuola
+                    Questa sezione è dedicata agli spostamenti a piedi, in bici e in auto. Scegliendo una specifica
+                    scuola
                     e il mezzo di trasporto, verrà caricata una mappa che mostra quali strade possano essere raggiunte
-                    in <b>5</b>, <b>10</b>, <b>15</b> e <b>20</b> minuti, la cui differenza in termini di tempo viene espressa dall'intensità del colore della strada.
+                    in <b>5</b>, <b>10</b>, <b>15</b> e <b>20</b> minuti, la cui differenza in termini di tempo viene
+                    espressa dall'intensità del colore della strada.
                 </p>
-                <select class="choose-school dropdown" onchange="update_route_isochrone()" value=0
-                    placeholder="Cerca la tua scuola..." id="school-select"></select>
+                <select class="choose-school" onchange="update_route_isochrone()" value=0
+                    placeholder="Cerca la tua scuola..." id="school-select" onfocus='this.size=10;'
+                    onblur='this.size=0;'></select>
                 <form id="choose-transport" onchange="update_route_isochrone()" value="walk">
                     <label>
-                        <i class="fas fa-walking">
+                        <i class="fas fa-walking" id="walk">
                             <input type="radio" name="choose-transport" value="walk" checked>
                         </i>
                     </label>
                     <label>
-                        <i class="fas fa-bicycle">
+                        <i class="fas fa-bicycle" id="bike">
                             <input type="radio" name="choose-transport" value="bike">
                         </i>
                     </label>
                     <label>
-                        <i class="fas fa-car">
+                        <i class="fas fa-car" id="drive_service">
                             <input type="radio" name="choose-transport" value="drive_service">
                         </i>
                     </label>
@@ -237,51 +252,113 @@
             <div class="content">
                 <h1>Punti di interesse</h1>
                 <h4>Categorie di luoghi accessibili attorno alle scuole</h4>
-                <select id="poi-select" class="choose-school dropdown" onchange="update_pois_path()" value=0 placeholder="Cerca la tua scuola...">
+                <p class="text-grey">
+                    Questa sezione è dedicata ai luoghi accessibili in un raggio aereo di <b>1km</b> dalla scuola
+                    selezionata (raffigurata esattamente al centro del cerchio, in rosso). Lo scopo della mappa è
+                    permettere all'utente di visualizzare il volume, la distribuzione e la classificazione di questi
+                    luoghi di interesse nei dintorni dell'area scolastica.
+                    <br>
+
+                </p>
+                <select id="poi-select" class="choose-school" onchange="update_pois_path()" value=0
+                    placeholder="Cerca la tua scuola..." onfocus='this.size=10;' onblur='this.size=0;'>
                 </select>
-                <p class="text-grey"></p>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
             </div>
             <div class="content">
                 <h4>Confronto con la media del comune e della provincia</h4>
+                <p class="text-grey">Il grafico a barre mette a confronto i punti di interesse (divisi per categoria in
+                    base al colore) della <b>singola scuola scelta</b>, del suo <b>comune di appartenenza</b> e
+                    dell'intera <b>provincia di Trento</b>. È possibile (de)selezionare una o più categorie di punti
+                    dalla legenda sulla destra, con un click. Posando il cursore sulle barre, viene fornito il numero o
+                    la media (nel caso del comune e della provincia) di punti di interesse nel luogo specificato
+                    sull'asse orizzontale. </p>
                 <iframe id="pois-barplot" src="viz/barplot/0.html"></iframe>
             </div>
         </div>
 
         <!-- Fifth Grid -->
-        <div id="knn" class="row-padding white container">
+        <div class="row-padding white container">
+            <div class="content">
+                <h1>Modelli di regressione spaziale</h1>
+                <h4>Connessioni tra le scuole più vicine</h4>
+                <p class="text-grey">
+                    Il K-nearest neighbour è un algoritmo che permette di associare a un punto (in questo caso una
+                    scuola) <span>K</span> punti più vicini (<span>K</span> altre scuole). Lo slider permette di
+                    cambiare il valore di <span>K</span> da <span>1</span> a
+                    <span>20</span>, di modo da porre attenzione ai cambiamenti alla rete scolastica trentina quando si
+                    valutano più
+                    o meno scuole vicine.
+                    <br>
+                    Scegliendo un <b><span>K</span> basso</b>, la mappa sarà corredata di pochi punti e qualche linea
+                    sottile, indicando nel primo caso la vicinanza tra le scuole e nel secondo la loro lontananza e la
+                    carenza nel territorio locale (come succede a Valdaone e Luserna). Più lunga la linea, maggiore la
+                    distanza che intercorre tra una scuola e l'altra.
+                    <br>
+                    Nel momento in cui <b><span>K</span></b> assume un valore <b>alto</b>, anche scuole molto lontane
+                    cominciano a connettersi, nonostante la distanza, poiché non vi sono altri punti nel vicinato. In
+                    questo modo si ottiene una rete di scuole che mette in evidenza le aree maggiormente interconnesse
+                    (con più scuole), come Rovereto e Trento, e quelle senza scuola, come il confine ovest della
+                    Comunità delle Giudicarie, la Valsugana e la Val di Fiemme.
+                </p>
+                <div>
+                    <div class="center">
+                        <p id="fill-with-k">k=1</p>
+                        <input type="range" min="1" max="20" value="1" class="slider" id="choose-knn"
+                            oninput="change_knn()">
+                        <img src="viz/knn/1.png" id="knn">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sixth Grid -->
+        <div id="community" class="row-padding light-gray container more-padding">
             <div class="content">
                 <div>
-                    <h1>Modelli di regressione spaziale</h1>
-                    <p class="text-grey">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint
-                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut
-                        enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div>
-
-                <div class="left">
-                    <input type="range" min="1" max="20" value="1" class="slider" id="choose-knn"
-                        oninput="change_knn()">
-                    <img src="viz/knn/1.png" id="knn">
+                    <h1>Comunità di valle</h1>
+                    <h4>Quali sono le comunità di valle nel Trentino?</h4>
+                    <p class="text-grey">
+                        Il Trentino è suddiviso in 16 Comunità di valle, enti territoriali locali della provincia
+                        autonoma di Trento che formano il livello istituzionale intermedio fra i comuni e la provincia.
+                        La mappa fornisce una visione generale di queste comunità e dei comuni che le compongono.
+                    </p>
+                    <iframe id="comunita-valle" src="viz/comunità.html"></iframe>
+                    <h4>La scuola nelle comunità di valle</h4>
+                    <p class="text-grey">
+                        Ogni comunità viene associata ad un colore, mantenuto anche nel grafico sottostante. Ogni
+                        casella, ogni colore, rappresentano una comunità diversa, con all'interno i suoi comuni. La
+                        grandezza di ogni casella è proporzionata al valore della variabile selezionata.
+                        <br>
+                        A partire dal menù a tendina, è possibile selezionare la variabile di preferenza, tra il numero
+                        di <b>Scuole</b>, di <b>Studenti</b> e di <b>Classi</b>, la <b>Popolazione totale</b> e la
+                        <b>giovanile</b> (tra i 5 e i 20 anni).
+                    </p>
+                    <select id="metric-select" class="choose-metric" onchange="update_trees()" value="Scuole totali">
+                        <option value="Scuole totali">Scuole</option>
+                        <option value="Studenti">Studenti</option>
+                        <option value="Classi">Classi</option>
+                        <option value="Popolazione">Popolazione</option>
+                        <option value="Pop under 20">Popolazione giovanile</option>
+                    </select>
+                    <iframe id="tree" src="viz/trees/Scuole totali.html"></iframe>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="container center w3-opacity">
+    <footer class="container center w3-opacity light-grey">
         <div class="w3-xlarge">
             <a href="https://github.com/AuroraArctic/TrentinoSchools" target="_blank"><i
                     class="fa fa-github w3-hover-opacity"></i></a>
             <a href="https://www.linkedin.com/in/aurora-maria-tumminello/" target="_blank"><i
                     class="fa fa-linkedin w3-hover-opacity"></i></a>
         </div>
-        <p>Aurora Maria Tumminello<br>Università degli Studi di Trento</p>
+        <p class="no-space">
+            <span>Aurora Maria Tumminello</span><br>
+            <span>Università degli Studi di Trento</span>
+        </p>
     </footer>
 
     <script>
@@ -314,6 +391,7 @@
                 x.className = "top";
             }
         }
+
     </script>
 </body>
 
