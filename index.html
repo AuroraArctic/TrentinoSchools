@@ -50,9 +50,12 @@
             $("#pois-barplot").attr("src", "viz/barplot/" + school + ".html");
 
         }
-        function update_route_isochrone() {
-            transport = $("input[name='choose-transport']:checked").val();
-            // console.log(transport);
+
+        $('#btn-group button').on("click", function () {
+            alert(this.id);
+        });
+
+        function update_route_isochrone(transport) {
             school = $("#school-select").val();
             $("#route-isochrone").attr("src", "viz/isochrones/route/" + transport + "/" + school + ".html");
         }
@@ -223,26 +226,20 @@
                     in <b>5</b>, <b>10</b>, <b>15</b> e <b>20</b> minuti, la cui differenza in termini di tempo viene
                     espressa dall'intensità del colore della strada.
                 </p>
-                <select class="choose-school" onchange="update_route_isochrone()" value=0
-                    placeholder="Cerca la tua scuola..." id="school-select" onfocus='this.size=10;'
-                    onblur='this.size=0;'></select>
-                <form id="choose-transport" onchange="update_route_isochrone()" value="walk">
-                    <label>
-                        <i class="fas fa-walking" id="walk">
-                            <input type="radio" name="choose-transport" value="walk" checked>
-                        </i>
-                    </label>
-                    <label>
-                        <i class="fas fa-bicycle" id="bike">
-                            <input type="radio" name="choose-transport" value="bike">
-                        </i>
-                    </label>
-                    <label>
-                        <i class="fas fa-car" id="drive_service">
-                            <input type="radio" name="choose-transport" value="drive_service">
-                        </i>
-                    </label>
-                </form>
+                <select class="choose-school form-select" onchange="update_route_isochrone(); this.size=1; this.blur();" value=0
+                    placeholder="Cerca la tua scuola..." id="school-select" onfocus="this.size=1;" onblur="this.size=0;"></select>
+
+                <div id="btn-group" class="btn-group btn-group-lg right" role="group">
+                    <button type="button" class="btn btn-secondary" value="walk">
+                        <i class="fas fa-walking" id="walk"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary" value="bike">
+                        <i class="fas fa-bicycle" id="bike"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary" value="drive_service">
+                        <i class="fas fa-car" id="drive_service"></i>
+                    </button>
+                </div>
                 <iframe id="route-isochrone" src="viz/isochrones/route/walk/0.html"></iframe>
             </div>
         </div>
@@ -261,8 +258,9 @@
                     <br>
 
                 </p>
-                <select id="poi-select" class="choose-school" onchange="update_pois_path()" value=0
-                    placeholder="Cerca la tua scuola..." onfocus='this.size=10;' onblur='this.size=0;'>
+                <select id="poi-select" class="choose-school form-select-lg form-select" value=0 onfocus="this.size=1;" onblur="this.size=0;"
+                onchange="update_pois_path()(); this.size=1; this.blur();" 
+                    placeholder="Cerca la tua scuola..." >
                 </select>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
             </div>
@@ -284,7 +282,8 @@
                 <h1>Modelli di regressione spaziale</h1>
                 <h4>Connessioni tra le scuole più vicine</h4>
                 <p class="text-grey">
-                    Il <b>K-nearest neighbour</b> è un algoritmo che permette di associare a un punto (in questo caso una
+                    Il <b>K-nearest neighbour</b> è un algoritmo che permette di associare a un punto (in questo caso
+                    una
                     scuola) <span>K</span> punti più vicini (<span>K</span> altre scuole). Lo slider permette di
                     cambiare il valore di <span>K</span> da <span>1</span> a
                     <span>20</span>, di modo da porre attenzione ai cambiamenti alla rete scolastica trentina quando si
@@ -292,7 +291,8 @@
                     <br>
                     Scegliendo un <b><span>K</span> basso</b>, la mappa sarà corredata da pochi punti e qualche linea
                     sottile, indicando nel primo caso la vicinanza tra le scuole e nel secondo la loro lontananza e la
-                    carenza di scuole nel territorio locale (come succede a Valdaone e Luserna). Più lunga la linea, maggiore la
+                    carenza di scuole nel territorio locale (come succede a Valdaone e Luserna). Più lunga la linea,
+                    maggiore la
                     distanza che intercorre tra una scuola e l'altra.
                     <br>
                     Nel momento in cui <b><span>K</span></b> assume un valore <b>alto</b>, anche scuole molto lontane
@@ -304,7 +304,7 @@
                 <div>
                     <div class="center">
                         <p id="fill-with-k">k=1</p>
-                        <input type="range" min="1" max="20" value="1" class="slider" id="choose-knn"
+                        <input type="range" min="1" max="20" value="0" class="clicked" id="choose-knn"
                             oninput="change_knn()">
                         <img src="viz/knn/1.png" id="knn">
                     </div>
@@ -323,7 +323,8 @@
                         autonoma di Trento che formano il livello istituzionale intermedio fra i comuni e la provincia.
                         La mappa fornisce una visione generale di queste comunità e dei comuni che le compongono.
                         <br>
-                        <i>Attenzione a come ordini i layer nella mappa! se le comunità vengono selezionate per ultime, potresti non riuscire a leggere i nomi dei comuni sottostanti.</i>
+                        <i>Attenzione a come ordini i layer nella mappa! se le comunità vengono selezionate per ultime,
+                            potresti non riuscire a leggere</i>
                     </p>
                     <iframe id="comunita-valle" src="viz/comunità.html"></iframe>
                     <h4>La scuola nelle comunità di valle</h4>
@@ -336,13 +337,16 @@
                         di <b>Scuole</b>, di <b>Studenti</b> e di <b>Classi</b>, la <b>Popolazione totale</b> e la
                         <b>giovanile</b> (tra i 5 e i 20 anni).
                     </p>
-                    <select id="metric-select" class="choose-metric" onchange="update_trees()" value="Scuole totali">
-                        <option value="Scuole totali">Scuole</option>
-                        <option value="Studenti">Studenti</option>
-                        <option value="Classi">Classi</option>
-                        <option value="Popolazione">Popolazione</option>
-                        <option value="Pop under 20">Popolazione giovanile</option>
-                    </select>
+                    <div>
+                        <select id="metric-select" class="choose-metric form-select" onfocus="this.size=1;" onblur="this.size=0;"
+                            onchange="update_trees(); this.size=1; this.blur();" value="Scuole totali">
+                            <option value="Scuole totali">Scuole</option>
+                            <option value="Studenti">Studenti</option>
+                            <option value="Classi">Classi</option>
+                            <option value="Popolazione">Popolazione</option>
+                            <option value="Pop under 20">Popolazione giovanile</option>
+                        </select>
+                    </div>
                     <iframe id="tree" src="viz/trees/Scuole totali.html"></iframe>
                 </div>
             </div>
@@ -367,9 +371,52 @@
 
         // Working to load the list of schools
         $(document).ready(function () {
-            $('.choose-school').select2()
+            $('.choose-school').select2();
+
+            // BUTTON GROUP HANDLING
+            $('#btn-group button').on('click', function () {
+                var thisBtn = $(this);
+
+                thisBtn.addClass('active').siblings().removeClass('active');
+                var btnText = thisBtn.text();
+                var btnValue = thisBtn.val();
+                update_route_isochrone(btnValue);
+                console.log(btnValue);
+            });
+            // Button group default value
+            $('#btn-group button[value="walk"]').click();
+
         });
 
+        // SLIDER
+        $('input[type=range]').wrap("<div class='range'></div>");
+        var i = 1;
+
+        $('.range').each(function () {
+            var n = this.getElementsByTagName('input')[0].value;
+            var x = (n / 20) * (this.getElementsByTagName('input')[0].offsetWidth - 8) - 12;
+            this.id = 'range' + i;
+            if (this.getElementsByTagName('input')[0].value == 0) {
+                this.className = "range"
+            } else {
+                this.className = "range rangeM"
+            }
+            this.innerHTML += "<style>#" + this.id + " input[type=range]::-webkit-slider-runnable-track {background:linear-gradient(to right, coral 0%, #444 " + n + "%, #444 " + n + "%)} #" + this.id + ":hover input[type=range]:before{content:'" + n + "'!important;left: " + x + "px;} #" + this.id + ":hover input[type=range]:after{left: " + x + "px}</style>";
+            i++
+        });
+
+        $('input[type=range]').on("input", function () {
+            var a = this.value;
+            var p = (a / 20) * (this.offsetWidth - 8) - 12;
+            if (a == 0) {
+                this.parentNode.className = "range"
+            } else {
+                this.parentNode.className = "range rangeM"
+            }
+            this.parentNode.getElementsByTagName('style')[0].innerHTML += "#" + this.parentNode.id + " input[type=range]::-webkit-slider-runnable-track {background:linear-gradient(to right, coral 0%, coral " + (a * 100 / 20) + "%, #444 " + a + "%)} #" + this.parentNode.id + ":hover input[type=range]:before{content:'" + a + "'!important;left: " + p + "px;} #" + this.parentNode.id + ":hover input[type=range]:after{left: " + p + "px}";
+        })
+
+        //  SELECT DYNAMIC LOADING OF SCHOOLS
         $.get("https://raw.githubusercontent.com/AuroraArctic/TrentinoSchools/main/data/schools_list_for_select.json",
             function (data, error) {
                 if (error) {
