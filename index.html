@@ -15,12 +15,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand" rel="stylesheet">
 
-    <!-- Particles -->
-    <link rel="stylesheet" href="particles.css">
-    <link rel="javascript" href="particles.js">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="customized_style.css">
-
     <!-- Font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/aef6d5743a.js" crossorigin="anonymous"></script>
@@ -35,9 +29,23 @@
         crossorigin=""></script>
 
     <!-- Select with research -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" /> -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <link rel="stylesheet" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
+
+    <!-- Particles -->
+    <link rel="stylesheet" href="particles.css">
+    <link rel="javascript" href="particles.js">
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="customized_style.css">
+    <link rel="stylesheet" href="select.css">
+
 
 </head>
 
@@ -78,15 +86,15 @@
         <a href="#home">Home</a>
         <a href="#searchschool">Cerca
             Scuola</a>
-        <a href="#density">Studenti</a>
-        <a href="#stats">Networking</a>
+        <a href="#students">Studenti</a>
+        <a href="#streets">Networking</a>
         <a href="#openstreetmap">Nei dintorni</a>
         <a href="#knn-section">KNN</a>
         <a href="#community">Comunità di valle</a>
         <a href="javascript:void(0);" class="icon" onclick="resize_navbar()">
             <i class="fa fa-bars"></i>
         </a>
-    </div>
+    </div> 
 
     <!-- Header -->
     <header id="home">
@@ -151,7 +159,7 @@
         </div>
 
         <!-- Second Grid -->
-        <div id="density" class="row-padding light-grey container">
+        <div id="students" class="row-padding light-grey container">
             <div class="content">
                 <div class="content">
                     <div class="left">
@@ -215,19 +223,18 @@
         </div>
 
         <!-- Third Grid -->
-        <div id="stats" class="row-padding white container">
+        <div id="streets" class="row-padding white container">
             <div class="content">
                 <h1>Networking</h1>
                 <h4>Quante strade puoi raggiungere?</h4>
                 <p class="text-grey">
                     Questa sezione è dedicata agli spostamenti a piedi, in bici e in auto. Scegliendo una specifica
-                    scuola
-                    e il mezzo di trasporto, verrà caricata una mappa che mostra quali strade possano essere raggiunte
+                    scuola e il mezzo di trasporto, verrà caricata una mappa che mostra quali strade possano essere raggiunte
                     in <b>5</b>, <b>10</b>, <b>15</b> e <b>20</b> minuti, la cui differenza in termini di tempo viene
                     espressa dall'intensità del colore della strada.
                 </p>
-                <select class="choose-school form-select" onchange="update_route_isochrone(); this.size=1; this.blur();" value=0
-                    placeholder="Cerca la tua scuola..." id="school-select" onfocus="this.size=1;" onblur="this.size=0;"></select>
+                <select class="choose-school left" onchange="update_route_isochrone();" value=0
+                     id="school-select"></select>
 
                 <div id="btn-group" class="btn-group btn-group-lg right" role="group">
                     <button type="button" class="btn btn-secondary" value="walk">
@@ -258,8 +265,8 @@
                     <br>
 
                 </p>
-                <select id="poi-select" class="choose-school form-select-lg form-select" value=0 onfocus="this.size=1;" onblur="this.size=0;"
-                onchange="update_pois_path()(); this.size=1; this.blur();" 
+                <select id="poi-select" class="choose-school" value=0
+                onchange="update_pois_path();" 
                     placeholder="Cerca la tua scuola..." >
                 </select>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
@@ -340,11 +347,11 @@
                     <div>
                         <select id="metric-select" class="choose-metric form-select" onfocus="this.size=1;" onblur="this.size=0;"
                             onchange="update_trees(); this.size=1; this.blur();" value="Scuole totali">
-                            <option value="Scuole totali">Scuole</option>
-                            <option value="Studenti">Studenti</option>
-                            <option value="Classi">Classi</option>
-                            <option value="Popolazione">Popolazione</option>
-                            <option value="Pop under 20">Popolazione giovanile</option>
+                            <option value="Scuole totali" style="font-family: Quicksand;">Scuole</option>
+                            <option value="Studenti" style="font-family: Quicksand;">Studenti</option>
+                            <option value="Classi" style="font-family: Quicksand;">Classi</option>
+                            <option value="Popolazione" style="font-family: Quicksand;">Popolazione</option>
+                            <option value="Pop under 20" style="font-family: Quicksand;">Popolazione giovanile</option>
                         </select>
                     </div>
                     <iframe id="tree" src="viz/trees/Scuole totali.html"></iframe>
@@ -385,7 +392,6 @@
             });
             // Button group default value
             $('#btn-group button[value="walk"]').click();
-
         });
 
         // SLIDER
@@ -440,6 +446,12 @@
                 x.className = "top";
             }
         }
+
+        
+        $('.choose-school').select2({
+            theme: "flat"
+        });
+
 
     </script>
 </body>

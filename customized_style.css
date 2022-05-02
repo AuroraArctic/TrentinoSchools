@@ -162,12 +162,6 @@ br {
     z-index: 100;
 }
 
-/* SELECT BOX */
-select option:checked,
-select option:hover {
-    box-shadow: 0 0 10px 100px #000 inset;
-}
-
 
 
 .no-shadow {
@@ -193,7 +187,7 @@ footer i {
 }
 
 select {
-    max-width: 390px;
+    
 }
 
 /* BUTTON GROUPS */
@@ -327,11 +321,6 @@ textarea {
     line-height: inherit
 }
 
-button,
-select {
-    text-transform: none
-}
-
 
 [type=button],
 [type=reset],
@@ -365,7 +354,12 @@ button:hover{
 
 }
 
+option{
+    font-family: 'Quicksand';
+}
 select {
+    max-width: 390px;
+    font-family: 'Quicksand', sans-serif;
     box-shadow: 1px 1px 5px #888;
     display: block;
     width: 100%;
@@ -373,9 +367,10 @@ select {
     -moz-padding-start: calc(0.75rem - 3px);
     font-size: 1rem;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 22.5px;
     color: #212529;
     background-color: #fff;
+    /* arrow in the select */
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right .75rem center;
@@ -388,16 +383,9 @@ select {
     appearance: none;
 }
 
-.form-select:focus {
+select:focus {
     border-color: coral;
     outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(242, 112, 89, .25)
-}
-
-.form-select-lg {
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-    padding-left: 1rem;
-    font-size: 1.25rem;
-    border-radius: .3rem
+    box-shadow: 0 0 0 .25rem rgba(242, 112, 89, .25);
+    font-family: Quicksand;
 }
