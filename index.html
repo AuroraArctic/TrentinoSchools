@@ -41,13 +41,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
 
     <!-- Particles -->
-    <link rel="stylesheet" href="particles.css">
-    <link rel="javascript" href="particles.js">
+    <link rel="stylesheet" href="website/particles.css">
+    <link rel="javascript" href="website/particles.js">
 
     <!-- Style -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="customized_style.css">
-    <link rel="stylesheet" href="select.css">
+    <link rel="stylesheet" href="website/style.css">
+    <link rel="stylesheet" href="website/customized_style.css">
+    <link rel="stylesheet" href="website/select.css">
 
 
 </head>
@@ -77,7 +77,6 @@
         function change_knn() {
             k = $("#choose-knn").val();
             $("#knn").attr("src", "viz/knn/" + k + ".png");
-            // console.log(k);
             document.getElementById("fill-with-k").innerHTML = "k=" + k;
         }
 
@@ -109,8 +108,8 @@
             <h4>Progetto di Geospatial Analysis & Representation</h4>
         </div>
         <div id="particles-js"></div>
-        <script src="particles.min.js"></script>
-        <script src="particles.js"></script>
+        <script src="website/particles.min.js"></script>
+        <script src="website/particles.js"></script>
     </header>
     <section>
         <!-- First Grid -->
@@ -156,7 +155,7 @@
                     minoranza del <b>4%</b> (totale).
                     <br>
                     D'altra parte, le scuole d'infanzia (<b>72%</b>) costituiscono la categoria preponderante tra le
-                    <b>scuole paritarie</b>. Contrariamente alle scuole statali,le primarie e le secondarie di primo
+                    <b>scuole paritarie</b>. Contrariamente alle scuole statali, le primarie e le secondarie di primo
                     grado
                     sono in minoranza (4% ciascuno) rispetto alle secondarie di secondo grado (<b>8%</b>). Inoltre,
                     oltre la
@@ -390,10 +389,12 @@
     <!-- Footer -->
     <footer class="container center w3-opacity light-grey">
         <div class="w3-xlarge">
-            <a href="https://github.com/AuroraArctic/TrentinoSchools" target="_blank"><i
-                    class="fa fa-github w3-hover-opacity"></i></a>
-            <a href="https://www.linkedin.com/in/aurora-maria-tumminello/" target="_blank"><i
-                    class="fa fa-linkedin w3-hover-opacity"></i></a>
+            <a href="https://github.com/AuroraArctic/TrentinoSchools" target="_blank">
+                <i class="fa fa-github large"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/aurora-maria-tumminello/" target="_blank">
+                <i class="fa fa-linkedin large"></i>
+            </a>
         </div>
         <p class="no-space">
             <span>Aurora Maria Tumminello</span><br>
@@ -421,7 +422,6 @@
                 var btnText = thisBtn.text();
                 var btnValue = thisBtn.val();
                 update_route_isochrone(btnValue);
-                console.log(btnValue);
             });
             // Button group default value
             $('#btn-group button[value="walk"]').click();
