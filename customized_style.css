@@ -107,7 +107,8 @@ form i:hover {
     max-width: 390px;
     left: 50%;
     height: 15px;
-    border-radius: 5px;
+    border-radius: 10px;
+    border: none;
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
@@ -150,6 +151,7 @@ form i:hover {
 
 
 br {
+    content: '';
     display: block;
     margin: 10px 0;
 }
@@ -301,6 +303,9 @@ select {
     box-shadow: 0 10 50% black;
 }
 
+.btn-group {
+    display: inline block;
+}
 
 button {
     border-radius: 0
@@ -358,11 +363,9 @@ option{
     font-family: 'Quicksand';
 }
 select {
-    max-width: 390px;
     font-family: 'Quicksand', sans-serif;
     box-shadow: 1px 1px 5px #888;
     display: block;
-    width: 100%;
     padding: .375rem 2.25rem .375rem .75rem;
     -moz-padding-start: calc(0.75rem - 3px);
     font-size: 1rem;
@@ -381,6 +384,8 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    width: 100%;
+    max-width: 393px;
 }
 
 select:focus {
@@ -389,3 +394,24 @@ select:focus {
     box-shadow: 0 0 0 .25rem rgba(242, 112, 89, .25);
     font-family: Quicksand;
 }
+
+select {
+    float:left;
+    width: 100%;
+}
+
+.panel {
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.choose-school {
+    line-height: 22.5px;
+}
+
+
+@media (max-width:700px){
+    .btn-group{
+        margin-top: 10px;
+    }    
+} 

@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- CSS Reset -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reseter.css" />
     <!-- Font  -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
@@ -33,14 +35,15 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <link rel="stylesheet" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>
 
     <!-- Particles -->
     <link rel="stylesheet" href="particles.css">
     <link rel="javascript" href="particles.js">
-    
+
     <!-- Style -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="customized_style.css">
@@ -59,12 +62,15 @@
 
         }
 
-        $('#btn-group button').on("click", function () {
-            alert(this.id);
-        });
-
         function update_route_isochrone(transport) {
-            school = $("#school-select").val();
+            if (transport == undefined) {
+                transport = $('#btn-group .active').val();
+            }
+            school = $(".choose-school").val();
+            if (school == null) {
+                school = 0;
+            }
+
             $("#route-isochrone").attr("src", "viz/isochrones/route/" + transport + "/" + school + ".html");
         }
 
@@ -94,7 +100,7 @@
         <a href="javascript:void(0);" class="icon" onclick="resize_navbar()">
             <i class="fa fa-bars"></i>
         </a>
-    </div> 
+    </div>
 
     <!-- Header -->
     <header id="home">
@@ -184,6 +190,7 @@
                             Studenti, Popolazione e Scuole mostrano alte concentrazioni sulle aree maggiormente popolate
                             (Trento, Rovereto, Riva del Garda, Cles, Arco, Pergine Valsugana),
                         </p>
+                        <br>
                         <h4>Gli studenti in rapporto alla popolazione</h4>
                         <p class="text-grey">
                             La mappa su <b>Studenti/Popolazione</b> illustra il rapporto tra la popolazione compresa tra
@@ -229,12 +236,14 @@
                 <h4>Quante strade puoi raggiungere?</h4>
                 <p class="text-grey">
                     Questa sezione è dedicata agli spostamenti a piedi, in bici e in auto. Scegliendo una specifica
-                    scuola e il mezzo di trasporto, verrà caricata una mappa che mostra quali strade possano essere raggiunte
+                    scuola e il mezzo di trasporto, verrà caricata una mappa che mostra quali strade possano essere
+                    raggiunte
                     in <b>5</b>, <b>10</b>, <b>15</b> e <b>20</b> minuti, la cui differenza in termini di tempo viene
                     espressa dall'intensità del colore della strada.
                 </p>
+                <br>
                 <select class="choose-school left" onchange="update_route_isochrone();" value=0
-                     id="school-select"></select>
+                    id="school-select"></select>
 
                 <div id="btn-group" class="btn-group btn-group-lg right" role="group">
                     <button type="button" class="btn btn-secondary" value="walk">
@@ -265,9 +274,8 @@
                     <br>
 
                 </p>
-                <select id="poi-select" class="choose-school" value=0
-                onchange="update_pois_path();" 
-                    placeholder="Cerca la tua scuola..." >
+                <br>
+                <select id="poi-select" class="choose-school" value=0 onchange="update_pois_path();">
                 </select>
                 <iframe id="pois" src="viz/pois/0.html"></iframe>
             </div>
@@ -310,7 +318,7 @@
                 </p>
                 <div>
                     <div class="center">
-                        <p id="fill-with-k">k=1</p>
+                        <p id="fill-with-k"></p>
                         <input type="range" min="1" max="20" value="0" class="clicked" id="choose-knn"
                             oninput="change_knn()">
                         <img src="viz/knn/1.png" id="knn">
@@ -344,9 +352,10 @@
                         di <b>Scuole</b>, di <b>Studenti</b> e di <b>Classi</b>, la <b>Popolazione totale</b> e la
                         <b>giovanile</b> (tra i 5 e i 20 anni).
                     </p>
+                    <br>
                     <div>
-                        <select id="metric-select" class="choose-metric form-select" onfocus="this.size=1;" onblur="this.size=0;"
-                            onchange="update_trees(); this.size=1; this.blur();" value="Scuole totali">
+                        <select id="metric-select" class="choose-metric" onchange="update_trees();"
+                            value="Scuole totali">
                             <option value="Scuole totali" style="font-family: Quicksand;">Scuole</option>
                             <option value="Studenti" style="font-family: Quicksand;">Studenti</option>
                             <option value="Classi" style="font-family: Quicksand;">Classi</option>
@@ -378,7 +387,13 @@
 
         // Working to load the list of schools
         $(document).ready(function () {
-            $('.choose-school').select2();
+            $('.choose-school').select2({
+                height: 'resolve'
+            });
+            $('.choose-metric').select2({
+                minimumResultsForSearch: Infinity,
+                height: 'resolve'
+            });
 
             // BUTTON GROUP HANDLING
             $('#btn-group button').on('click', function () {
@@ -392,6 +407,9 @@
             });
             // Button group default value
             $('#btn-group button[value="walk"]').click();
+
+            // When reloading the page, if k is not 1, show the correct number
+            document.getElementById("fill-with-k").innerHTML = "k=" + $("#choose-knn").val();
         });
 
         //  SELECT DYNAMIC LOADING OF SCHOOLS
@@ -419,7 +437,7 @@
             }
         }
 
-        
+
         $('.choose-school').select2({
             theme: "flat"
         });
